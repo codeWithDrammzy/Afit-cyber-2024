@@ -1,0 +1,115 @@
+{% extends 'Lost_Found/base.html' %}
+{% load static %}
+
+{% block title %}Login - AFIT Lost & Found{% endblock %}
+
+{% block content %}
+
+<!-- Fullscreen Centered Section -->
+<section style="min-height: 100vh; background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%); display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;">
+  <div style="background: white; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); width: 100%; max-width: 400px; overflow: hidden;">
+    
+    <!-- Header Section with Background -->
+    <div style="background: linear-gradient(to right, #1a4b8c 0%, #2c6bb8 100%); padding: 1.5rem; text-align: center;">
+      <!-- Logo -->
+      <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+        <div style="background: white; border-radius: 50%; padding: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          <img src="{% static 'images/logo.jpg' %}" alt="AFIT Lost & Found Logo" 
+               style="height: 40px; width: 40px; object-fit: cover; border-radius: 50%;"
+               onerror="this.src='https://via.placeholder.com/40/1a4b8c/ffffff?text=AFIT'">
+        </div>
+      </div>
+
+      <h2 style="font-size: 1.5rem; font-weight: bold; color: white; margin-bottom: 0.5rem;">Welcome Back</h2>
+      <p style="color: #bfdbfe; font-size: 0.875rem;">Sign in to your AFIT Lost & Found account</p>
+    </div>
+
+    <!-- Form Section -->
+    <div style="padding: 2rem;">
+      <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Username/Email Field -->
+        <div style="margin-bottom: 1rem;">
+          <label for="username" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+            Username or Email
+          </label>
+          <div style="position: relative;">
+            <input type="text" 
+                   id="username" 
+                   name="username" 
+                   required
+                   style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; transition: all 0.2s;"
+                   placeholder="Enter your username or email"
+                   onfocus="this.style.borderColor='#1a4b8c'; this.style.boxShadow='0 0 0 2px rgba(26, 75, 140, 0.2)'"
+                   onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+            <i class="fas fa-user" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div style="margin-bottom: 1.5rem;">
+          <label for="password" style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+            Password
+          </label>
+          <div style="position: relative;">
+            <input type="password" 
+                   id="password" 
+                   name="password" 
+                   required
+                   style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; transition: all 0.2s;"
+                   placeholder="Enter your password"
+                   onfocus="this.style.borderColor='#1a4b8c'; this.style.boxShadow='0 0 0 2px rgba(26, 75, 140, 0.2)'"
+                   onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+            <i class="fas fa-lock" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center;">
+            <input type="checkbox" 
+                   id="remember_me" 
+                   name="remember_me"
+                   style="width: 1rem; height: 1rem; color: #1a4b8c; border-color: #d1d5db; border-radius: 0.25rem;">
+            <label for="remember_me" style="margin-left: 0.5rem; font-size: 0.875rem; color: #4b5563;">
+              Remember me
+            </label>
+          </div>
+          <a href="#" style="font-size: 0.875rem; color: #1a4b8c; font-weight: 500; text-decoration: none;">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" 
+                style="width: 100%; background: #1a4b8c; color: white; font-weight: 600; padding: 0.75rem 1rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s;"
+                onmouseover="this.style.backgroundColor='#153a6e'"
+                onmouseout="this.style.backgroundColor='#1a4b8c'">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Registration Link -->
+      <div style="margin-top: 2rem; text-align: center;">
+        <p style="color: #6b7280; margin-bottom: 0;">
+          Don't have an account?
+          <a href="{% url 'register' %}" 
+             style="color: #1a4b8c; font-weight: 600; text-decoration: none; margin-left: 0.25rem;">
+            Create account
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Security Note -->
+    <div style="background: #f9fafb; padding: 1rem 2rem; border-top: 1px solid #e5e7eb;">
+      <div style="display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #6b7280;">
+        <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
+        <span>Your login information is securely encrypted</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

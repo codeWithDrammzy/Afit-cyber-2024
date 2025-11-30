@@ -1,0 +1,102 @@
+{% extends 'Lost_Found/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Create Account</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">AFIT Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@afit.edu.ng" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password1" name="password1" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password2" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password2" name="password2" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="user_type" class="form-label">I am a</label>
+                            <select class="form-select" id="user_type" name="user_type" required>
+                                <option value="" selected disabled>Select your role</option>
+                                <option value="student">Student</option>
+                                <option value="staff">Staff</option>
+                                <option value="faculty">Faculty</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agree_terms" required>
+                            <label class="form-check-label" for="agree_terms">
+                                I agree to the Terms & Conditions
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2">Create Account</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="mb-0">Already have an account? <a href="" class="text-decoration-none">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    padding: 1.5rem;
+}
+
+.form-control:focus {
+    border-color: #1a4b8c;
+    box-shadow: 0 0 0 0.2rem rgba(26, 75, 140, 0.25);
+}
+
+.btn-primary {
+    background-color: #1a4b8c;
+    border-color: #1a4b8c;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #153a6e;
+    border-color: #153a6e;
+}
+</style>
+{% endblock %}
