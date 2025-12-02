@@ -1,0 +1,396 @@
+{% extends 'Lost_Found/main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="p-4 md:p-6">
+    <!-- Page Header -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">📦 Found Items</h1>
+        <p class="text-gray-600">Items found around campus. See if something belongs to you.</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-6">
+        <div class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input 
+                type="text" 
+                placeholder="Search found items (e.g., 'phone', 'keys', 'wallet')..." 
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                id="searchInput"
+            >
+        </div>
+    </div>
+
+    <!-- Found Items List -->
+    <div class="space-y-6">
+        <!-- Item 1: iPhone -->
+        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <!-- Item Header -->
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                FOUND
+                            </span>
+                            <span class="text-gray-500 text-sm">Today, 10:30 AM</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">iPhone 13 Pro</h2>
+                        <p class="text-gray-600 text-sm mt-1">📍 Library - 2nd Floor, Computer Section</p>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                        Electronics
+                    </span>
+                </div>
+                
+                <!-- Item Image and Details -->
+                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
+                    <!-- Image -->
+                    <div class="md:w-1/3 mb-4 md:mb-0">
+                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-mobile-alt text-gray-400 text-4xl mb-2"></i>
+                                    <p class="text-gray-500 text-sm">iPhone Image</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="md:w-2/3">
+                        <div class="space-y-3">
+                            <!-- Description -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
+                                <p class="text-gray-600">Black iPhone 13 Pro in a clear case. Has a small crack on the bottom right corner of the screen. The lock screen is a picture of a golden retriever puppy.</p>
+                            </div>
+                            
+                            <!-- Found By -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Found By</h3>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <span class="text-blue-600 font-semibold text-sm">JD</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800">John Doe</p>
+                                        <p class="text-gray-600 text-sm">Student ID: S123456</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Info -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Contact Information</h3>
+                                <div class="flex items-center space-x-2 text-gray-600">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>j.doe@student.edu</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-gray-600 mt-1">
+                                    <i class="fas fa-phone"></i>
+                                    <span>+1 (555) 123-4567</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                            <i class="fas fa-clock mr-1"></i>Unclaimed
+                        </span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-hand-paper mr-2"></i>Claim This Item
+                        </button>
+                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                            <i class="fas fa-info-circle mr-2"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 2: Wallet -->
+        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <!-- Item Header -->
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                FOUND
+                            </span>
+                            <span class="text-gray-500 text-sm">Yesterday, 3:15 PM</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">Black Leather Wallet</h2>
+                        <p class="text-gray-600 text-sm mt-1">📍 Student Union Building - Cafeteria</p>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                        Personal Items
+                    </span>
+                </div>
+                
+                <!-- Item Image and Details -->
+                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
+                    <!-- Image -->
+                    <div class="md:w-1/3 mb-4 md:mb-0">
+                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-wallet text-gray-400 text-4xl mb-2"></i>
+                                    <p class="text-gray-500 text-sm">Wallet Image</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="md:w-2/3">
+                        <div class="space-y-3">
+                            <!-- Description -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
+                                <p class="text-gray-600">Black leather wallet containing student ID card, two credit cards, and some cash. The wallet has a small "Nike" logo on the front.</p>
+                            </div>
+                            
+                            <!-- Found By -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Found By</h3>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                        <span class="text-green-600 font-semibold text-sm">JS</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800">Jane Smith</p>
+                                        <p class="text-gray-600 text-sm">Student ID: S789012</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Info -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Contact Information</h3>
+                                <div class="flex items-center space-x-2 text-gray-600">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>j.smith@student.edu</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+                            <i class="fas fa-clock mr-1"></i>Unclaimed
+                        </span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-hand-paper mr-2"></i>Claim This Item
+                        </button>
+                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                            <i class="fas fa-info-circle mr-2"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 3: Keys -->
+        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
+            <div class="p-5">
+                <!-- Item Header -->
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                FOUND
+                            </span>
+                            <span class="text-gray-500 text-sm">Dec 11, 2024 • 9:45 AM</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800">Car Keys with Keychain</h2>
+                        <p class="text-gray-600 text-sm mt-1">📍 Parking Lot A - Near Main Gate</p>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+                        Keys
+                    </span>
+                </div>
+                
+                <!-- Item Image and Details -->
+                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
+                    <!-- Image -->
+                    <div class="md:w-1/3 mb-4 md:mb-0">
+                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-key text-gray-400 text-4xl mb-2"></i>
+                                    <p class="text-gray-500 text-sm">Keys Image</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="md:w-2/3">
+                        <div class="space-y-3">
+                            <!-- Description -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
+                                <p class="text-gray-600">Set of car keys with Toyota logo. Attached to a blue leather keychain with a small flashlight. Found on the ground near parking space #45.</p>
+                            </div>
+                            
+                            <!-- Found By -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Found By</h3>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                        <span class="text-purple-600 font-semibold text-sm">RB</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800">Robert Brown</p>
+                                        <p class="text-gray-600 text-sm">Campus Security</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Info -->
+                            <div>
+                                <h3 class="font-semibold text-gray-700 mb-1">Contact Information</h3>
+                                <p class="text-gray-600">Please contact Campus Security Office at extension 5555</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div>
+                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                            <i class="fas fa-check-circle mr-1"></i>Claimed
+                        </span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors" disabled>
+                            <i class="fas fa-info-circle mr-2"></i>Already Claimed
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="emptyState" class="hidden bg-white rounded-xl border border-gray-200 p-8 md:p-12 text-center">
+        <div class="max-w-md mx-auto">
+            <div class="text-gray-400 mb-4">
+                <i class="fas fa-box-open text-5xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">No Found Items</h3>
+            <p class="text-gray-600 mb-6">Check back later for new found items.</p>
+        </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="mt-8 text-center">
+        <button class="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+            <i class="fas fa-redo mr-2"></i>Load More Items
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const items = document.querySelectorAll('.bg-white.rounded-xl.border');
+        const emptyState = document.getElementById('emptyState');
+        
+        if (searchInput && items.length > 0) {
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
+                
+                items.forEach(item => {
+                    const itemName = item.querySelector('h2')?.textContent.toLowerCase() || '';
+                    const location = item.querySelector('p.text-gray-600.text-sm')?.textContent.toLowerCase() || '';
+                    const description = item.querySelector('.text-gray-600')?.textContent.toLowerCase() || '';
+                    
+                    if (itemName.includes(searchTerm) || 
+                        location.includes(searchTerm) || 
+                        description.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Show/hide empty state
+                if (visibleCount === 0 && searchTerm.length > 0) {
+                    emptyState.classList.remove('hidden');
+                    items.forEach(item => item.style.display = 'none');
+                } else {
+                    emptyState.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Claim button functionality
+        const claimButtons = document.querySelectorAll('button:has(i.fa-hand-paper)');
+        claimButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemName = this.closest('.bg-white.rounded-xl').querySelector('h2').textContent;
+                
+                if (confirm(`Are you sure this "${itemName}" belongs to you?`)) {
+                    // Show loading state
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                    this.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        alert('Claim request submitted! The finder will contact you for verification.');
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i>Claim Requested';
+                        this.classList.remove('bg-blue-600');
+                        this.classList.add('bg-gray-400');
+                        
+                        // Update status badge
+                        const statusBadge = this.closest('.bg-white.rounded-xl').querySelector('.rounded-full');
+                        if (statusBadge) {
+                            statusBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Claim Pending';
+                            statusBadge.classList.remove('bg-yellow-100', 'text-yellow-700');
+                            statusBadge.classList.add('bg-blue-100', 'text-blue-700');
+                        }
+                    }, 1500);
+                }
+            });
+        });
+        
+        // View details buttons
+        const viewButtons = document.querySelectorAll('button:has(i.fa-info-circle)');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemName = this.closest('.bg-white.rounded-xl').querySelector('h2').textContent;
+                alert(`Opening detailed view for: ${itemName}\n\nIn a real application, this would open a detailed page.`);
+                // In real implementation: window.location.href = `/item-details/`;
+            });
+        });
+    });
+</script>
+
+{% endblock %}

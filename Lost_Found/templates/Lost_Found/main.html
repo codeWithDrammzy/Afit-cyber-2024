@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Lost & Found System{% endblock %}</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Prevent horizontal scrolling */
+        * {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* AFIT Blue Gradient */
+        .afit-blue-gradient {
+            background-image: linear-gradient(rgba(26, 75, 140, 0.85), rgba(26, 75, 140, 0.9));
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        /* Bottom navigation styles */
+        .bottom-nav {
+            height: 60px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+            z-index: 50;
+        }
+        
+        .nav-item {
+            flex: 1;
+            min-width: 0; /* Prevents flex items from overflowing */
+        }
+        
+        .nav-item.active {
+            color: #1a4b8c;
+        }
+        
+        .nav-item.active .nav-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-item.active i {
+            color: #ffffff;
+        }
+        
+        /* Content area padding to avoid bottom nav overlap */
+        .content-wrapper {
+            padding-bottom: 60px;
+        }
+        
+        /* Ensure main content doesn't overflow */
+        main {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Custom scrollbar for sidebar */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Main Layout -->
+    <div class="flex min-h-screen">
+        <!-- Desktop Sidebar (hidden on mobile) - AFIT Blue Theme -->
+        <aside class="hidden md:flex flex-col w-64 sidebar afit-blue-gradient text-white">
+            <!-- Logo Section -->
+            <div class="p-5 border-b border-blue-700/30 sticky top-0 z-10">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Lost & Found</h1>
+                        <p class="text-blue-100 text-sm mt-1">AFIT Campus</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Info -->
+            <div class="p-4 border-b border-blue-700/30 sticky top-[81px] z-10">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</span>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-medium text-white truncate">{{ user.get_full_name }}</p>
+                        <p class="text-blue-100 text-xs truncate">{{ user.student.matric_no }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation - Scrollable Area -->
+            <nav class="flex-1 p-4 sidebar-nav">
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{% url 'std-board' %}" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors {% if request.resolver_match.url_name == 'std-board' %}bg-white/10 text-white font-medium{% endif %}">
+                            <i class="fas fa-home w-5"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'found-item' %}" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors {% if request.resolver_match.url_name == 'found-item' %}bg-white/10 text-white font-medium{% endif %}">
+                            <i class="fas fa-box w-5"></i>
+                            <span>Found Items</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'lost-item' %}" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors {% if request.resolver_match.url_name == 'lost-item' %}bg-white/10 text-white font-medium{% endif %}">
+                            <i class="fas fa-search w-5"></i>
+                            <span>Lost Items</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'report-item' %}" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors {% if request.resolver_match.url_name == 'report-item' %}bg-white/10 text-white font-medium{% endif %}">
+                            <i class="fas fa-plus-circle w-5"></i>
+                            <span>Report Item</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="my-report" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/10 hover:text-white transition-colors {% if request.resolver_match.url_name == 'my-report' %}bg-white/10 text-white font-medium{% endif %}">
+                            <i class="fas fa-history w-5"></i>
+                            <span>My Reports</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Divider -->
+                    <li class="pt-4 mt-4 border-t border-blue-700/30">
+                        <div class="px-3 py-2">
+                            <p class="text-xs text-blue-200 uppercase tracking-wider">Account</p>
+                        </div>
+                    </li>
+                    
+                    <!-- Logout in main navigation -->
+                    <li>
+                        <a href="{% url 'logout' %}" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-red-500/20 hover:text-red-200 transition-colors">
+                            <i class="fas fa-sign-out-alt w-5"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Support Section -->
+            <div class="p-4 border-t border-blue-700/30 mt-auto">
+                <div class="text-center">
+                    <p class="text-xs text-blue-200">AFIT Lost & Found System</p>
+                    <a href="#" class="text-xs text-blue-300 hover:text-white mt-1 inline-block">Need Help?</a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="flex-1 w-full content-wrapper">
+            <!-- Top Bar (Mobile Header) - With AFIT Blue -->
+            <header class="md:hidden bg-gradient-to-r from-blue-800 to-blue-900 text-white px-4 py-3 sticky top-0 z-10">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-white text-lg">
+                                {% if request.resolver_match.url_name == 'std-board' %}
+                                    Dashboard
+                                {% elif request.resolver_match.url_name == 'found-item' %}
+                                    Found Items
+                                {% elif request.resolver_match.url_name == 'lost-item' %}
+                                    Lost Items
+                                {% elif request.resolver_match.url_name == 'report-item' %}
+                                    Report Item
+                                {% elif request.resolver_match.url_name == 'my-report' %}
+                                    My Reports
+                                {% else %}
+                                    AFIT Lost & Found
+                                {% endif %}
+                            </h1>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile User Menu -->
+                    <div class="flex items-center space-x-3">
+                        <!-- User Avatar -->
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold text-sm">{{ user.first_name|first|upper }}</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="p-4 md:p-6 w-full">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    
+    <!-- Mobile Bottom Navigation (Only on mobile) - AFIT Blue Theme -->
+    <nav class="md:hidden bottom-nav fixed bottom-0 left-0 right-0 bg-gradient-to-t from-blue-800 to-blue-900 text-white border-t border-blue-700/30">
+        <div class="flex h-16">
+            <!-- Home Tab -->
+            <a href="{% url 'std-board' %}" 
+               class="nav-item flex flex-col items-center justify-center px-1 {% if request.resolver_match.url_name == 'std-board' %}active{% endif %}">
+                <div class="nav-icon w-9 h-9 rounded-full flex items-center justify-center mb-1">
+                    <i class="fas fa-home text-base"></i>
+                </div>
+                <span class="text-[10px] font-medium truncate px-1">Home</span>
+            </a>
+            
+            <!-- Found Tab -->
+            <a href="{% url 'found-item' %}" 
+               class="nav-item flex flex-col items-center justify-center px-1 {% if request.resolver_match.url_name == 'found-item' %}active{% endif %}">
+                <div class="nav-icon w-9 h-9 rounded-full flex items-center justify-center mb-1">
+                    <i class="fas fa-box text-base"></i>
+                </div>
+                <span class="text-[10px] font-medium truncate px-1">Found</span>
+            </a>
+            
+            <!-- Lost Tab -->
+            <a href="{% url 'lost-item' %}" 
+               class="nav-item flex flex-col items-center justify-center px-1 {% if request.resolver_match.url_name == 'lost-item' %}active{% endif %}">
+                <div class="nav-icon w-9 h-9 rounded-full flex items-center justify-center mb-1">
+                    <i class="fas fa-search text-base"></i>
+                </div>
+                <span class="text-[10px] font-medium truncate px-1">Lost</span>
+            </a>
+            
+            <!-- Report Tab -->
+            <a href="{% url 'report-item' %}" 
+               class="nav-item flex flex-col items-center justify-center px-1 {% if request.resolver_match.url_name == 'report-item' %}active{% endif %}">
+                <div class="nav-icon w-9 h-9 rounded-full flex items-center justify-center mb-1">
+                    <i class="fas fa-plus text-base"></i>
+                </div>
+                <span class="text-[10px] font-medium truncate px-1">Report</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Simple JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prevent horizontal scrolling
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.type === 'range' || e.target.classList.contains('overflow-x-auto')) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+        
+        // Active state for nav items
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => {
+                    nav.classList.remove('active');
+                    nav.querySelector('.nav-icon').classList.remove('bg-white/20');
+                    nav.querySelector('i').classList.remove('text-white');
+                });
+                
+                this.classList.add('active');
+                const icon = this.querySelector('.nav-icon');
+                const iconElement = this.querySelector('i');
+                if (icon) icon.classList.add('bg-white/20');
+                if (iconElement) iconElement.classList.add('text-white');
+            });
+            
+            // Touch feedback
+            item.addEventListener('touchstart', function() {
+                this.style.opacity = '0.7';
+            });
+            
+            item.addEventListener('touchend', function() {
+                this.style.opacity = '1';
+            });
+        });
+        
+        // Set active state based on current page
+        const currentUrl = window.location.pathname;
+        const navLinks = document.querySelectorAll('.sidebar a, .bottom-nav a');
+        
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') && currentUrl.includes(link.getAttribute('href').replace(/^\//, ''))) {
+                link.classList.add('active');
+                const icon = link.querySelector('.nav-icon');
+                const iconElement = link.querySelector('i');
+                if (icon) icon.classList.add('bg-white/20');
+                if (iconElement) iconElement.classList.add('text-white');
+                
+                // For sidebar links
+                if (link.closest('.sidebar')) {
+                    link.classList.add('bg-white/10', 'text-white', 'font-medium');
+                }
+            }
+        });
+        
+        // Fix for iOS safari 100vh issue
+        function setAppHeight() {
+            const doc = document.documentElement;
+            doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+        }
+        
+        window.addEventListener('resize', setAppHeight);
+        setAppHeight();
+        
+        // Make sidebar items clickable with visual feedback
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Remove active class from all sidebar links
+                sidebarLinks.forEach(l => {
+                    l.classList.remove('bg-white/10', 'text-white', 'font-medium');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('bg-white/10', 'text-white', 'font-medium');
+            });
+        });
+    });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFIT Lost & Found System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{% block title %}AFIT Lost & Found System{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -14,260 +16,186 @@
             --success-color: #28a745;
             --danger-color: #dc3545;
         }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            color: var(--primary-color) !important;
-        }
-        
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #2c6bb8 100%);
-            color: white;
-            padding: 4rem 0;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 2rem;
-        }
-        
-        .feature-card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            margin-bottom: 1.5rem;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 0.5rem 1.5rem;
-            font-weight: 600;
-        }
-        
-        .btn-primary:hover {
-            background-color: #153a6e;
-            border-color: #153a6e;
-        }
-        
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .report-card {
-            border-left: 4px solid var(--primary-color);
-            border-radius: 8px;
-        }
-        
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .status-found {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-lost {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .status-resolved {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        
-        .form-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-        
-        .section-title {
-            position: relative;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
-        
-        .search-box {
-            position: relative;
-        }
-        
-        .search-box input {
-            padding-right: 40px;
-        }
-        
-        .search-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-        
-        .item-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .stats-card {
-            text-align: center;
-            padding: 1.5rem;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .stats-label {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 font-sans">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-search me-2"></i>AFIT Lost & Found
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url '' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Report Item</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Browse Items</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">FAQ</a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <a href="{% url 'my-login'%}" class="btn btn-outline-primary me-2">Login</a>
-                    <a href="{% url 'register'%}" class="btn btn-primary">Sign Up</a >
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'index' %}" class="flex items-center space-x-2 text-blue-800 font-bold text-xl">
+                        <i class="fas fa-search"></i>
+                        <span>AFIT Lost & Found</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'index' %}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Report Item</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Browse Items</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">FAQ</a>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="{% url 'my_login' %}" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                        Login
+                    </a>
+                    <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        Sign Up
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu (Hidden by default) -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
+                    <a href="{% url 'index' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Report Item</a>
+                    <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Browse Items</a>
+                    <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">FAQ</a>
+                    <div class="border-t pt-3 space-y-2">
+                        <a href="{% url 'my_login' %}" class="block px-3 py-2 text-blue-600 font-medium">Login</a>
+                        <a href="{% url 'register' %}" class="block px-3 py-2 bg-blue-600 text-white rounded-lg font-medium text-center">Sign Up</a>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
-    {%block content%}
-    
-    {%endblock%}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5 class="mb-3">AFIT Lost & Found</h5>
-                    <p>A secure platform for reporting and finding lost items on the AFIT campus.</p>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+    <footer class="bg-blue-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <h5 class="text-xl font-bold">AFIT Lost & Found</h5>
+                    <p class="text-blue-200">A secure platform for reporting and finding lost items on the AFIT campus.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-blue-200 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-blue-200 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-blue-200 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h5 class="mb-3">Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Home</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Report Item</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Browse Items</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">FAQ</a></li>
+
+                <!-- Quick Links -->
+                <div class="space-y-4">
+                    <h5 class="text-lg font-semibold">Quick Links</h5>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'index' %}" class="text-blue-200 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white transition-colors">Report Item</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white transition-colors">Browse Items</a></li>
+                        <li><a href="#" class="text-blue-200 hover:text-white transition-colors">FAQ</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="mb-3">Contact</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>AFIT Campus</li>
-                        <li class="mb-2"><i class="fas fa-phone me-2"></i>+234 XXX XXX XXXX</li>
-                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>lostfound@afit.edu.ng</li>
+
+                <!-- Contact -->
+                <div class="space-y-4">
+                    <h5 class="text-lg font-semibold">Contact</h5>
+                    <ul class="space-y-2 text-blue-200">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>AFIT Campus</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone"></i>
+                            <span>+234 XXX XXX XXXX</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>lostfound@afit.edu.ng</span>
+                        </li>
                     </ul>
                 </div>
-                <div class="col-lg-3">
-                    <h5 class="mb-3">Project Team</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">Chairman: [Name]</li>
-                        <li class="mb-2">Developer: [Your Name]</li>
-                        <li class="mb-2">Secretary: [Name]</li>
-                        <li class="mb-2">PRO: [Name]</li>
+
+                <!-- Project Team -->
+                <div class="space-y-4">
+                    <h5 class="text-lg font-semibold">Project Team</h5>
+                    <ul class="space-y-1 text-blue-200">
+                        <li>Chairman: [Name]</li>
+                        <li>Developer: [Your Name]</li>
+                        <li>Secretary: [Name]</li>
+                        <li>PRO: [Name]</li>
                     </ul>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="text-center">
+
+            <!-- Copyright -->
+            <div class="border-t border-blue-700 mt-8 pt-8 text-center text-blue-200">
                 <p>&copy; 2023 AFIT Lost & Found System. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript for mobile menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    // Toggle the 'hidden' class
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Change icon based on menu state
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+
+                // Close mobile menu when clicking on a link
+                const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuButton.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    });
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNav = event.target.closest('nav');
+                    const isMobileMenuButton = event.target.closest('#mobile-menu-button');
+                    
+                    if (!isClickInsideNav && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuButton.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
