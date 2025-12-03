@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Department, Student, Item
+from .models import *
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -70,3 +70,4 @@ class ItemAdmin(admin.ModelAdmin):
             'fields': ('is_verified', 'verified_by')
         }),
     )
+

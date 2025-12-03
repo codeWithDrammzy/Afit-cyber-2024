@@ -130,6 +130,8 @@ class Student(models.Model):
                 'matric_no': f'Matric number department code "{department_code}" does not match selected department "{self.department.name}" (code: {self.department.code}).'
             })
 
+
+
 class Item(models.Model):
     STATUS_CHOICES = (
         ('lost', 'Lost'),

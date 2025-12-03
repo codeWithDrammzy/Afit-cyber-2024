@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Student, Department
+from .models import *
+from django.utils import timezone
 
 class StudentRegistrationForm(UserCreationForm):
+
     email = forms.EmailField(
         required=True,
         label="AFIT Email",
@@ -172,3 +174,55 @@ class StudentRegistrationForm(UserCreationForm):
                 )
         
         return cleaned_data
+
+
+
+
+# forms.py
+from django import forms
+from .models import Item
+from django.utils import timezone
+
+class ItemReportForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            'title', 
+            'description', 
+            'category', 
+            'status',
+            'location_found', 
+            'location_lost', 
+            'date_occurred',
+            'image',
+        ]
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'date_occurred': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial date to now
+        self.fields['date_occurred'].initial = timezone.now()
+    class Meta:
+        model = Item
+        fields = [
+            'title', 
+            'description', 
+            'category', 
+            'status',
+            'location_found', 
+            'location_lost', 
+            'date_occurred',
+            'image',
+        ]
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'date_occurred': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial date to now
+        self.fields['date_occurred'].initial = timezone.now()

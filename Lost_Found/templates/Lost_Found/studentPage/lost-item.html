@@ -10,75 +10,93 @@
             <div>
                 <h1 class="text-2xl font-bold text-gray-800 mb-2">🔍 Lost Items</h1>
                 <p class="text-gray-600">Items reported lost by students. Help others find their belongings.</p>
+                <p class="text-sm text-gray-500 mt-1">Total: {{ total_items }} lost items found</p>
             </div>
             
             <!-- Report Lost Button -->
-            <button class="mt-4 md:mt-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <a href="{% url 'report-item' %}" class="mt-4 md:mt-0 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center">
                 <i class="fas fa-plus-circle mr-2"></i>Report Lost Item
-            </button>
+            </a>
         </div>
     </div>
 
     <!-- Search and Filter -->
     <div class="mb-6 space-y-4">
         <!-- Search Bar -->
-        <div class="relative">
+        <form method="GET" action="{% url 'lost-item' %}" class="relative">
             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             <input 
                 type="text" 
+                name="search"
+                value="{{ search_query }}"
                 placeholder="Search lost items (e.g., 'phone', 'laptop', 'wallet')..." 
                 class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none"
-                id="searchInput"
             >
-        </div>
+            {% if search_query %}
+                <a href="{% url 'lost-item' %}" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </a>
+            {% endif %}
+        </form>
         
         <!-- Filter Chips -->
         <div class="flex flex-wrap gap-2">
-            <button class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+            <a href="{% url 'lost-item' %}" 
+               class="px-3 py-1 {% if not selected_category and not selected_date %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} rounded-full text-sm font-medium">
                 All Items
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
-                Electronics
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
-                Personal Items
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
-                Documents
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
-                Accessories
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
+            </a>
+            
+            {% for value, label in categories %}
+            <a href="{% url 'lost-item' %}?category={{ value }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+               class="px-3 py-1 {% if selected_category == value %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} rounded-full text-sm font-medium">
+                {{ label }}
+            </a>
+            {% endfor %}
+            
+            <a href="{% url 'lost-item' %}?date=today{% if search_query %}&search={{ search_query }}{% endif %}" 
+               class="px-3 py-1 {% if selected_date == 'today' %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} rounded-full text-sm font-medium">
                 Today
-            </button>
-            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">
+            </a>
+            
+            <a href="{% url 'lost-item' %}?date=week{% if search_query %}&search={{ search_query }}{% endif %}" 
+               class="px-3 py-1 {% if selected_date == 'week' %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %} rounded-full text-sm font-medium">
                 This Week
-            </button>
+            </a>
         </div>
     </div>
 
     <!-- Lost Items List -->
     <div class="space-y-6">
-        <!-- Item 1: iPhone (High Priority) -->
-        <div class="bg-white rounded-xl border border-red-200 hover:shadow-md transition-shadow">
+        {% for item in lost_items %}
+        <div class="bg-white rounded-xl border {% if forloop.first %}border-red-200{% else %}border-gray-200{% endif %} hover:shadow-md transition-shadow">
             <div class="p-5">
                 <!-- Item Header -->
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <div class="flex items-center space-x-2 mb-2">
                             <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                                LOST • URGENT
+                                LOST
+                                {% if forloop.first and item.date_occurred|timesince == '0 minutes' %}
+                                    • URGENT
+                                {% endif %}
                             </span>
-                            <span class="text-gray-500 text-sm">Today, 9:15 AM</span>
+                            <span class="text-gray-500 text-sm">
+                                {{ item.date_occurred|date:"M d, Y" }} • {{ item.date_occurred|time:"g:i A" }}
+                            </span>
                         </div>
-                        <h2 class="text-xl font-bold text-gray-800">iPhone 14 Pro Max</h2>
-                        <p class="text-gray-600 text-sm mt-1">📍 Science Building • Room 305 • Lab Area</p>
+                        <h2 class="text-xl font-bold text-gray-800">{{ item.title }}</h2>
+                        <p class="text-gray-600 text-sm mt-1">📍 {{ item.location_lost|default:"Location not specified" }}</p>
                     </div>
                     
                     <!-- Category Badge -->
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                        Electronics
+                    <span class="px-3 py-1 
+                        {% if item.category == 'electronics' %}bg-blue-100 text-blue-700
+                        {% elif item.category == 'documents' %}bg-purple-100 text-purple-700
+                        {% elif item.category == 'clothing' %}bg-pink-100 text-pink-700
+                        {% elif item.category == 'accessories' %}bg-yellow-100 text-yellow-700
+                        {% elif item.category == 'books' %}bg-indigo-100 text-indigo-700
+                        {% else %}bg-gray-100 text-gray-700{% endif %} rounded-full text-xs font-medium">
+                        {{ item.get_category_display }}
                     </span>
                 </div>
                 
@@ -86,14 +104,32 @@
                 <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
                     <!-- Image -->
                     <div class="md:w-1/3 mb-4 md:mb-0">
+                        {% if item.image %}
+                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                        </div>
+                        {% else %}
                         <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
                             <div class="w-full h-full flex items-center justify-center">
                                 <div class="text-center">
-                                    <i class="fas fa-mobile-alt text-gray-400 text-4xl mb-2"></i>
-                                    <p class="text-gray-500 text-sm">iPhone Image</p>
+                                    {% if item.category == 'electronics' %}
+                                    <i class="fas fa-laptop text-gray-400 text-4xl mb-2"></i>
+                                    {% elif item.category == 'documents' %}
+                                    <i class="fas fa-file-alt text-gray-400 text-4xl mb-2"></i>
+                                    {% elif item.category == 'clothing' %}
+                                    <i class="fas fa-tshirt text-gray-400 text-4xl mb-2"></i>
+                                    {% elif item.category == 'accessories' %}
+                                    <i class="fas fa-key text-gray-400 text-4xl mb-2"></i>
+                                    {% elif item.category == 'books' %}
+                                    <i class="fas fa-book text-gray-400 text-4xl mb-2"></i>
+                                    {% else %}
+                                    <i class="fas fa-box text-gray-400 text-4xl mb-2"></i>
+                                    {% endif %}
+                                    <p class="text-gray-500 text-sm">No Image</p>
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                     
                     <!-- Details -->
@@ -102,13 +138,19 @@
                             <!-- Description -->
                             <div>
                                 <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
-                                <p class="text-gray-600">Gold iPhone 14 Pro Max with a silver case. Has a distinctive crack on the top left corner. The wallpaper shows a beach sunset. Contains important research notes in the Notes app.</p>
+                                <p class="text-gray-600">{{ item.description|linebreaksbr }}</p>
                             </div>
                             
                             <!-- Last Seen -->
                             <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Last Seen</h3>
-                                <p class="text-gray-600">Left on desk after Physics lab session. Was charging at wall socket near window.</p>
+                                <h3 class="font-semibold text-gray-700 mb-1">Last Seen Details</h3>
+                                <p class="text-gray-600">
+                                    {% if item.location_lost %}
+                                        Last seen at: {{ item.location_lost }}
+                                    {% else %}
+                                        Location details not provided
+                                    {% endif %}
+                                </p>
                             </div>
                             
                             <!-- Reported By -->
@@ -116,11 +158,21 @@
                                 <h3 class="font-semibold text-gray-700 mb-1">Reported By</h3>
                                 <div class="flex items-center space-x-3">
                                     <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                                        <span class="text-red-600 font-semibold text-sm">MS</span>
+                                        <span class="text-red-600 font-semibold text-sm">
+                                            {{ item.reported_by.first_name|first|default:item.reported_by.username|first|upper }}
+                                        </span>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-800">Michael Scott</p>
-                                        <p class="text-gray-600 text-sm">Student ID: S345678</p>
+                                        <p class="font-medium text-gray-800">
+                                            {{ item.reported_by.get_full_name|default:item.reported_by.username }}
+                                        </p>
+                                        <p class="text-gray-600 text-sm">
+                                            {% if item.reported_by.student.matric_no %}
+                                                Student ID: {{ item.reported_by.student.matric_no }}
+                                            {% else %}
+                                                {{ item.reported_by.email }}
+                                            {% endif %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -130,120 +182,26 @@
                                 <h3 class="font-semibold text-gray-700 mb-1">Contact Information</h3>
                                 <div class="flex items-center space-x-2 text-gray-600">
                                     <i class="fas fa-envelope"></i>
-                                    <span>m.scott@student.edu</span>
+                                    <span>{{ item.reported_by.email }}</span>
                                 </div>
+                                {% if item.reported_by.phone_number %}
                                 <div class="flex items-center space-x-2 text-gray-600 mt-1">
                                     <i class="fas fa-phone"></i>
-                                    <span>+1 (555) 987-6543</span>
+                                    <span>{{ item.reported_by.phone_number }}</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats and Actions -->
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center pt-4 border-t border-gray-100">
-                    <!-- Stats -->
-                    <div class="mb-3 md:mb-0">
-                        <div class="flex items-center space-x-4 text-sm">
-                            <span class="text-gray-600">
-                                <i class="fas fa-eye mr-1"></i> 24 views
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-comment mr-1"></i> 3 possible matches
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-clock mr-1"></i> 3 hours missing
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                            <i class="fas fa-check-circle mr-2"></i>I Found This!
-                        </button>
-                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
-                            <i class="fas fa-info-circle mr-2"></i>View Details
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Item 2: Laptop -->
-        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="p-5">
-                <!-- Item Header -->
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                                LOST
-                            </span>
-                            <span class="text-gray-500 text-sm">Yesterday, 2:30 PM</span>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800">MacBook Pro 2023</h2>
-                        <p class="text-gray-600 text-sm mt-1">📍 Library • Quiet Study Zone • Table near window</p>
-                    </div>
-                    
-                    <!-- Category Badge -->
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                        Electronics
-                    </span>
-                </div>
-                
-                <!-- Item Image and Details -->
-                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
-                    <!-- Image -->
-                    <div class="md:w-1/3 mb-4 md:mb-0">
-                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
-                            <div class="w-full h-full flex items-center justify-center">
-                                <div class="text-center">
-                                    <i class="fas fa-laptop text-gray-400 text-4xl mb-2"></i>
-                                    <p class="text-gray-500 text-sm">Laptop Image</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Details -->
-                    <div class="md:w-2/3">
-                        <div class="space-y-3">
-                            <!-- Description -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
-                                <p class="text-gray-600">Space Gray MacBook Pro 14-inch, M2 Pro chip. Has a distinctive sticker of a mountain on the lid. Contains important thesis work. Last seen with charging cable attached.</p>
+                                {% endif %}
                             </div>
                             
-                            <!-- Last Seen -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Last Seen</h3>
-                                <p class="text-gray-600">Left unattended for 10 minutes while getting coffee from library café. Was at table #12 in quiet study zone.</p>
-                            </div>
-                            
-                            <!-- Reported By -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Reported By</h3>
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span class="text-blue-600 font-semibold text-sm">AR</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">Alex Rivera</p>
-                                        <p class="text-gray-600 text-sm">Graduate Student • Computer Science</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Reward -->
+                            <!-- Reward or Urgent Note -->
+                            {% if forloop.first %}
                             <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-3">
                                 <div class="flex items-center space-x-2">
-                                    <i class="fas fa-gift text-yellow-600"></i>
-                                    <span class="font-semibold text-yellow-700">$100 REWARD</span>
-                                    <span class="text-yellow-600 text-sm">offered for safe return</span>
+                                    <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+                                    <span class="font-semibold text-yellow-700">URGENT</span>
+                                    <span class="text-yellow-600 text-sm">Reported recently - still likely on campus</span>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -254,273 +212,163 @@
                     <div class="mb-3 md:mb-0">
                         <div class="flex items-center space-x-4 text-sm">
                             <span class="text-gray-600">
-                                <i class="fas fa-eye mr-1"></i> 48 views
+                                <i class="fas fa-clock mr-1"></i> {{ item.date_occurred|timesince }} ago
                             </span>
                             <span class="text-gray-600">
-                                <i class="fas fa-comment mr-1"></i> 5 possible matches
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-clock mr-1"></i> 1 day missing
+                                <i class="fas fa-calendar mr-1"></i> Reported: {{ item.date_reported|date:"M d, Y" }}
                             </span>
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
                     <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors found-btn"
+                                data-item-id="{{ item.id }}"
+                                data-item-title="{{ item.title }}">
                             <i class="fas fa-check-circle mr-2"></i>I Found This!
                         </button>
-                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                        <a href="" 
+                           class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors inline-flex items-center">
                             <i class="fas fa-info-circle mr-2"></i>View Details
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Item 3: Student ID -->
-        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="p-5">
-                <!-- Item Header -->
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                                LOST
-                            </span>
-                            <span class="text-gray-500 text-sm">Dec 10, 2024 • 11:00 AM</span>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800">Student ID Card</h2>
-                        <p class="text-gray-600 text-sm mt-1">📍 Student Center • Food Court • Near Pizza Stand</p>
-                    </div>
-                    
-                    <!-- Category Badge -->
-                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                        Documents
-                    </span>
+        {% empty %}
+        <!-- Empty State -->
+        <div class="bg-white rounded-xl border border-gray-200 p-8 md:p-12 text-center">
+            <div class="max-w-md mx-auto">
+                <div class="text-gray-400 mb-4">
+                    <i class="fas fa-search text-5xl"></i>
                 </div>
-                
-                <!-- Item Image and Details -->
-                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
-                    <!-- Image -->
-                    <div class="md:w-1/3 mb-4 md:mb-0">
-                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
-                            <div class="w-full h-full flex items-center justify-center">
-                                <div class="text-center">
-                                    <i class="fas fa-id-card text-gray-400 text-4xl mb-2"></i>
-                                    <p class="text-gray-500 text-sm">ID Card Image</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Details -->
-                    <div class="md:w-2/3">
-                        <div class="space-y-3">
-                            <!-- Description -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
-                                <p class="text-gray-600">University student ID card with blue lanyard. Name: Sarah Johnson. Student ID: S901234. Photo shows brown hair, glasses, wearing red shirt.</p>
-                            </div>
-                            
-                            <!-- Last Seen -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Last Seen</h3>
-                                <p class="text-gray-600">Fell out of backpack while getting lunch at food court. Last used to pay for pizza.</p>
-                            </div>
-                            
-                            <!-- Reported By -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Reported By</h3>
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                        <span class="text-green-600 font-semibold text-sm">SJ</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">Sarah Johnson</p>
-                                        <p class="text-gray-600 text-sm">Student ID: S901234</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Urgency -->
-                            <div class="bg-red-50 border border-red-100 rounded-lg p-3">
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-exclamation-triangle text-red-600"></i>
-                                    <span class="font-semibold text-red-700">URGENT NEED</span>
-                                    <span class="text-red-600 text-sm">Need ID for exams next week</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats and Actions -->
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center pt-4 border-t border-gray-100">
-                    <!-- Stats -->
-                    <div class="mb-3 md:mb-0">
-                        <div class="flex items-center space-x-4 text-sm">
-                            <span class="text-gray-600">
-                                <i class="fas fa-eye mr-1"></i> 16 views
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-comment mr-1"></i> 1 possible match
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-clock mr-1"></i> 2 days missing
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                            <i class="fas fa-check-circle mr-2"></i>I Found This!
-                        </button>
-                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
-                            <i class="fas fa-info-circle mr-2"></i>View Details
-                        </button>
-                    </div>
-                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">No Lost Items Found</h3>
+                <p class="text-gray-600 mb-4">
+                    {% if search_query or selected_category or selected_date %}
+                        Try different search terms or filters.
+                    {% else %}
+                        No lost items have been reported yet.
+                    {% endif %}
+                </p>
+                <a href="{% url 'report-item' %}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-plus-circle mr-2"></i>Be the first to report
+                </a>
             </div>
         </div>
-
-        <!-- Item 4: Glasses -->
-        <div class="bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="p-5">
-                <!-- Item Header -->
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                                LOST
-                            </span>
-                            <span class="text-gray-500 text-sm">Dec 9, 2024 • 4:45 PM</span>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800">Ray-Ban Glasses</h2>
-                        <p class="text-gray-600 text-sm mt-1">📍 Sports Complex • Basketball Court • Bleachers Area</p>
-                    </div>
-                    
-                    <!-- Category Badge -->
-                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-                        Accessories
-                    </span>
-                </div>
-                
-                <!-- Item Image and Details -->
-                <div class="flex flex-col md:flex-row md:space-x-5 mb-4">
-                    <!-- Image -->
-                    <div class="md:w-1/3 mb-4 md:mb-0">
-                        <div class="bg-gray-100 rounded-lg overflow-hidden aspect-square">
-                            <div class="w-full h-full flex items-center justify-center">
-                                <div class="text-center">
-                                    <i class="fas fa-glasses text-gray-400 text-4xl mb-2"></i>
-                                    <p class="text-gray-500 text-sm">Glasses Image</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Details -->
-                    <div class="md:w-2/3">
-                        <div class="space-y-3">
-                            <!-- Description -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Description</h3>
-                                <p class="text-gray-600">Ray-Ban sunglasses, black frame with green lenses. In a black hard case with RB logo. Prescription sunglasses (-2.5 both eyes). Small scratch on left lens.</p>
-                            </div>
-                            
-                            <!-- Last Seen -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Last Seen</h3>
-                                <p class="text-gray-600">Left on bleachers while watching basketball game. Was in glasses case inside backpack pocket.</p>
-                            </div>
-                            
-                            <!-- Reported By -->
-                            <div>
-                                <h3 class="font-semibold text-gray-700 mb-1">Reported By</h3>
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                        <span class="text-purple-600 font-semibold text-sm">TJ</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">Taylor Jones</p>
-                                        <p class="text-gray-600 text-sm">Student ID: S567890</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats and Actions -->
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center pt-4 border-t border-gray-100">
-                    <!-- Stats -->
-                    <div class="mb-3 md:mb-0">
-                        <div class="flex items-center space-x-4 text-sm">
-                            <span class="text-gray-600">
-                                <i class="fas fa-eye mr-1"></i> 8 views
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-comment mr-1"></i> 0 possible matches
-                            </span>
-                            <span class="text-gray-600">
-                                <i class="fas fa-clock mr-1"></i> 3 days missing
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                            <i class="fas fa-check-circle mr-2"></i>I Found This!
-                        </button>
-                        <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
-                            <i class="fas fa-info-circle mr-2"></i>View Details
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
-    <!-- Empty State -->
-    <div id="emptyState" class="hidden bg-white rounded-xl border border-gray-200 p-8 md:p-12 text-center">
-        <div class="max-w-md mx-auto">
-            <div class="text-gray-400 mb-4">
-                <i class="fas fa-search text-5xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">No Lost Items Found</h3>
-            <p class="text-gray-600 mb-6">Try different search terms or check back later for new lost item reports.</p>
+    <!-- Pagination -->
+    {% if lost_items.has_other_pages %}
+    <div class="mt-8 flex justify-center">
+        <div class="flex items-center space-x-2">
+            {% if lost_items.has_previous %}
+                <a href="?page={{ lost_items.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}" 
+                   class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            {% endif %}
+            
+            {% for num in lost_items.paginator.page_range %}
+                {% if lost_items.number == num %}
+                    <span class="px-3 py-2 bg-red-600 text-white rounded-lg">{{ num }}</span>
+                {% elif num > lost_items.number|add:'-3' and num < lost_items.number|add:'3' %}
+                    <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}" 
+                       class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            
+            {% if lost_items.has_next %}
+                <a href="?page={{ lost_items.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}" 
+                   class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
         </div>
     </div>
+    {% endif %}
 
-    <!-- Load More Button -->
-    <div class="mt-8 text-center">
-        <button class="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-            <i class="fas fa-redo mr-2"></i>Load More Items
-        </button>
+    <!-- Showing Results Info -->
+    {% if total_items > 0 %}
+    <div class="mt-4 text-center text-gray-500 text-sm">
+        Showing {{ lost_items.start_index }} - {{ lost_items.end_index }} of {{ total_items }} lost items
     </div>
+    {% endif %}
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    const items = document.querySelectorAll('.bg-white.rounded-xl.border');
-    const emptyState = document.getElementById('emptyState');
-    const filterChips = document.querySelectorAll('.bg-gray-100.text-gray-700');
+    // "I Found This!" button functionality
+    const foundButtons = document.querySelectorAll('.found-btn');
+    foundButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const itemTitle = this.getAttribute('data-item-title');
+            
+            if (confirm(`Are you sure you found "${itemTitle}"? This will notify the owner.`)) {
+                // Show loading state
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Connecting...';
+                this.disabled = true;
+                
+                // Send AJAX request to mark as found
+                fetch(`/api/mark-found/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        found_by_user_id: '{{ request.user.id }}'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('The owner has been notified! They will contact you soon to arrange pickup.');
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i>Owner Notified';
+                        this.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        this.classList.add('bg-gray-400');
+                        
+                        // Update the item status visually
+                        const statusBadge = this.closest('.bg-white.rounded-xl').querySelector('.bg-red-100');
+                        if (statusBadge) {
+                            statusBadge.innerHTML = 'FOUND • PENDING PICKUP';
+                            statusBadge.classList.remove('bg-red-100', 'text-red-700');
+                            statusBadge.classList.add('bg-green-100', 'text-green-700');
+                        }
+                    } else {
+                        alert('Error: ' + data.error);
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                });
+            }
+        });
+    });
     
-    if (searchInput && items.length > 0) {
+    // Search functionality with debounce
+    let searchTimer;
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
         searchInput.addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            filterItems(searchTerm);
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                this.closest('form').submit();
+            }, 500);
         });
     }
     
-    // Filter chips functionality
+    // Filter chips highlight on click
+    const filterChips = document.querySelectorAll('a.bg-gray-100');
     filterChips.forEach(chip => {
-        chip.addEventListener('click', function() {
+        chip.addEventListener('click', function(e) {
             // Remove active state from all chips
             filterChips.forEach(c => {
                 c.classList.remove('bg-red-100', 'text-red-700');
@@ -530,102 +378,63 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active state to clicked chip
             this.classList.remove('bg-gray-100', 'text-gray-700');
             this.classList.add('bg-red-100', 'text-red-700');
-            
-            const filterText = this.textContent.toLowerCase();
-            filterItems(filterText === 'all items' ? '' : filterText);
         });
     });
     
-    function filterItems(searchTerm) {
-        let visibleCount = 0;
-        
-        items.forEach(item => {
-            const itemName = item.querySelector('h2')?.textContent.toLowerCase() || '';
-            const location = item.querySelector('p.text-gray-600.text-sm')?.textContent.toLowerCase() || '';
-            const description = item.querySelector('.text-gray-600')?.textContent.toLowerCase() || '';
-            const category = item.querySelector('.rounded-full.text-xs')?.textContent.toLowerCase() || '';
-            
-            if (searchTerm === '' || 
-                itemName.includes(searchTerm) || 
-                location.includes(searchTerm) || 
-                description.includes(searchTerm) ||
-                category.includes(searchTerm)) {
-                item.style.display = 'block';
-                visibleCount++;
-            } else {
-                item.style.display = 'none';
+    // Helper function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
-        });
-        
-        // Show/hide empty state
-        if (visibleCount === 0 && searchTerm.length > 0) {
-            emptyState.classList.remove('hidden');
-        } else {
-            emptyState.classList.add('hidden');
         }
-    }
-    
-    // "I Found This!" button functionality
-    const foundButtons = document.querySelectorAll('button:has(i.fa-check-circle)');
-    foundButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemName = this.closest('.bg-white.rounded-xl').querySelector('h2').textContent;
-            
-            if (confirm(`Are you sure you found "${itemName}"? This will notify the owner.`)) {
-                // Show loading state
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Connecting...';
-                this.disabled = true;
-                
-                // Simulate API call
-                setTimeout(() => {
-                    alert('The owner has been notified! They will contact you soon to arrange pickup.');
-                    this.innerHTML = '<i class="fas fa-check mr-2"></i>Owner Notified';
-                    this.classList.remove('bg-green-600');
-                    this.classList.add('bg-gray-400');
-                    
-                    // Update stats
-                    const commentsSpan = this.closest('.bg-white.rounded-xl').querySelector('.fa-comment').parentElement;
-                    if (commentsSpan) {
-                        const currentText = commentsSpan.textContent;
-                        const currentCount = parseInt(currentText.match(/\d+/)[0]) || 0;
-                        commentsSpan.innerHTML = `<i class="fas fa-comment mr-1"></i> ${currentCount + 1} possible matches`;
-                    }
-                }, 1500);
-            }
-        });
-    });
-    
-    // View details buttons
-    const viewButtons = document.querySelectorAll('button:has(i.fa-info-circle)');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemName = this.closest('.bg-white.rounded-xl').querySelector('h2').textContent;
-            alert(`Opening detailed view for: ${itemName}\n\nThis would show complete contact info and more details.`);
-        });
-    });
-    
-    // Report Lost Item button
-    const reportButton = document.querySelector('button.bg-red-600');
-    if (reportButton) {
-        reportButton.addEventListener('click', function() {
-            alert('Redirecting to report lost item form...');
-            // In real implementation: window.location.href = '/report-lost/';
-        });
-    }
-    
-    // Load More button
-    const loadMoreBtn = document.querySelector('button:has(i.fa-redo)');
-    if (loadMoreBtn) {
-        loadMoreBtn.addEventListener('click', function() {
-            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
-            setTimeout(() => {
-                alert('Loading more lost items...\n\nIn a real app, this would fetch next page of results.');
-                this.innerHTML = '<i class="fas fa-redo mr-2"></i>Load More Items';
-            }, 1000);
-        });
+        return cookieValue;
     }
 });
 </script>
+
+<style>
+/* Smooth transitions */
+.transition-shadow {
+    transition: box-shadow 0.3s ease;
+}
+
+/* Aspect ratio for images */
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .flex-col.md\:flex-row {
+        flex-direction: column;
+    }
+    
+    .md\:w-1\/3, .md\:w-2\/3 {
+        width: 100%;
+    }
+}
+
+/* Loading spinner animation */
+.fa-spinner.fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Card hover effects */
+.hover\:shadow-md:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+</style>
 
 {% endblock %}
