@@ -119,3 +119,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'Lost_Found.User'
+
+# settings.py - Make sure your custom backend is FIRST
+AUTHENTICATION_BACKENDS = [
+    'Lost_Found.backends.EmailOrUsernameBackend',  # This should be first
+    'django.contrib.auth.backends.ModelBackend',   # This is fallback
+]

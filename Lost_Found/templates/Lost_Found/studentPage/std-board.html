@@ -182,7 +182,7 @@
     <div class="mb-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-800">Recently Found Items</h2>
-            <a href="{% url 'found-items' %}" class="text-blue-600 text-sm font-medium hover:text-blue-800">Browse All →</a>
+            <a href="{% url 'found-item' %}" class="text-blue-600 text-sm font-medium hover:text-blue-800">Browse All →</a>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -219,7 +219,7 @@
                                     by {{ item.reported_by.first_name|default:item.reported_by.username }}
                                 {% endif %}
                             </span>
-                            <a href="{% url 'item-detail' item.id %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Details →</a>
+                            <a href="" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Details →</a>
                         </div>
                     </div>
                 </div>

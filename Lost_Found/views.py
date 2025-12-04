@@ -1,13 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import timedelta
+
 from .forms import *
-from .models import *
+from .models import Item, Student, User
 
 
-# =========== Homes & Authentification ============
+# ================= HOME & AUTH ==================
 def index(request):
     return render(request, "Lost_Found/homePages/index.html")
+
+def my_logout(request):
+    logout(request)
+    return redirect('index')
+
+
 
 def register_page(request):
     form = StudentRegistrationForm()
@@ -42,70 +54,70 @@ def register_page(request):
     
     return render(request, "Lost_Found/homePages/register.html", {'form': form})
 
+
 def my_login(request):
+    print("=== LOGIN VIEW CALLED ===")
+    
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
         
+        print(f"📝 DEBUG: Username from form: '{username}'")
+        print(f"📝 DEBUG: Password length: {len(password)}")
+        
+        # Validate inputs
+        if not username or not password:
+            messages.error(request, 'Please provide both matric number/email and password.')
+            return render(request, "Lost_Found/homePages/my-login.html")
+        
+        # Authenticate using custom backend
         user = authenticate(request, username=username, password=password)
         
-        if user is not None:
+        print(f"👤 DEBUG: Authentication result: {user}")
+        
+        if user:
             login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
+            print(f"✅ DEBUG: Login successful for: {user.username}")
+            messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
+            
+            # Check if user is verified
+            if not user.is_verified:
+                messages.warning(request, 'Please verify your email address to access all features.')
             
             # Redirect based on user type
             if user.user_type == 'admin':
-                return redirect('admin_dashboard')  # You'll need to create this view
-            else:
-                return redirect('std-board')  # You'll need to create this view
+                return redirect('admin_dashboard')
+            else:  # student
+                return redirect('std-board')
         else:
-            messages.error(request, 'Invalid username or password.')
+            print("❌ DEBUG: Authentication failed")
+        
+        messages.error(request, 'Invalid matric number/email or password.')
     
     return render(request, "Lost_Found/homePages/my-login.html")
 
-def my_logout(request):
-    logout(request)
-    return redirect('index')
 
 
-# ============= Student Dashbard =========
 
-# @login_required
+ # ================= STUDENT DASHBOARD ==================
 def student_dashboard(request):
     if not request.user.is_authenticated:
         return redirect('my_login')
-    
-    # Get current user
+
     user = request.user
     
-    # Calculate stats
     active_reports = Item.objects.filter(reported_by=user, status__in=['lost', 'found']).count()
-    
-    # Items found by current user (found items they reported)
     items_found = Item.objects.filter(reported_by=user, status='found').count()
+    pending_claims = Item.objects.filter(reported_by=user, status='found', claimed_by__isnull=True).count()
+    resolved_cases = Item.objects.filter(reported_by=user, status='returned').count()
     
-    # Pending claims (items reported by user that are found and not yet claimed)
-    pending_claims = Item.objects.filter(
-        reported_by=user, 
-        status='found',
-        claimed_by__isnull=True
-    ).count()
-    
-    # Resolved cases (items that have been claimed or returned)
-    resolved_cases = Item.objects.filter(
-        reported_by=user,
-        status__in=['returned']
-    ).count()
-    
-    # Recently found items (found by others, not by current user)
     recently_found = Item.objects.filter(
         status='found',
-        reported_by__student__isnull=False  # Only items reported by students
+        reported_by__student__isnull=False
     ).exclude(reported_by=user).order_by('-date_reported')[:4]
     
-    # User's recent items
     user_recent_items = Item.objects.filter(reported_by=user).order_by('-date_reported')[:5]
-    
+
     context = {
         'user': user,
         'active_reports': active_reports,
@@ -118,20 +130,13 @@ def student_dashboard(request):
     
     return render(request, "Lost_Found/studentPage/std-board.html", context)
 
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from .models import Item
-from django.core.paginator import Paginator
 
-
+# ================= LOST ITEMS ==================
 @login_required
 def lost_item(request):
-    # Get all lost items, ordered by most recent
     lost_items = Item.objects.filter(status='lost').order_by('-date_reported')
-    
-    # Search functionality
+
+    # Search
     search_query = request.GET.get('search', '')
     if search_query:
         lost_items = lost_items.filter(
@@ -140,51 +145,37 @@ def lost_item(request):
             Q(location_lost__icontains=search_query) |
             Q(category__icontains=search_query)
         )
-    
-    # Filter by category
+
+    # Category filter
     category_filter = request.GET.get('category', '')
     if category_filter:
         lost_items = lost_items.filter(category=category_filter)
-    
-    # Filter by date (last 24 hours)
+
+    # Date filter
     date_filter = request.GET.get('date', '')
     if date_filter == 'today':
-        from django.utils import timezone
-        from datetime import timedelta
-        yesterday = timezone.now() - timedelta(days=1)
-        lost_items = lost_items.filter(date_occurred__gte=yesterday)
+        lost_items = lost_items.filter(date_occurred__gte=timezone.now() - timedelta(days=1))
     elif date_filter == 'week':
-        from django.utils import timezone
-        from datetime import timedelta
-        last_week = timezone.now() - timedelta(days=7)
-        lost_items = lost_items.filter(date_occurred__gte=last_week)
-    
+        lost_items = lost_items.filter(date_occurred__gte=timezone.now() - timedelta(days=7))
+
     # Pagination
-    paginator = Paginator(lost_items, 10)  # Show 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    # Get unique categories for filter
-    categories = Item.CATEGORY_CHOICES
-    
+    paginator = Paginator(lost_items, 10)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
     context = {
         'lost_items': page_obj,
-        'categories': categories,
+        'categories': Item.CATEGORY_CHOICES,
         'search_query': search_query,
         'selected_category': category_filter,
         'selected_date': date_filter,
         'total_items': lost_items.count(),
     }
-    
+
     return render(request, 'Lost_Found/studentPage/lost-item.html', context)
 
 
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .forms import ItemReportForm
-
+# ================= REPORT ITEM ==================
+@login_required
 def report_item(request):
     form = ItemReportForm()
     
@@ -192,30 +183,19 @@ def report_item(request):
         form = ItemReportForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
-            item.reported_by = request.user  # Same as product.farmer = request.user.farmermodel
+            item.reported_by = request.user
             item.save()
             messages.success(request, f'Item "{item.title}" has been reported successfully!')
-            return redirect('std-board')  # Change to your desired redirect
+            return redirect('std-board')
     
-    context = {
-        'form': form,
-    }
-    return render(request, 'Lost_Found/studentPage/report-item.html', context)
+    return render(request, 'Lost_Found/studentPage/report-item.html', {'form': form})
 
 
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from .models import Item
-from django.core.paginator import Paginator
-
+# ================= FOUND ITEMS ==================
 @login_required
 def found_item(request):
-    # Get all found items, ordered by most recent
     found_items = Item.objects.filter(status='found').order_by('-date_reported')
-    
-    # Search functionality
+
     search_query = request.GET.get('search', '')
     if search_query:
         found_items = found_items.filter(
@@ -224,43 +204,33 @@ def found_item(request):
             Q(location_found__icontains=search_query) |
             Q(category__icontains=search_query)
         )
-    
-    # Filter by category
+
+    # Category filter
     category_filter = request.GET.get('category', '')
     if category_filter:
         found_items = found_items.filter(category=category_filter)
-    
-    # Filter by claim status
+
+    # Claim filter
     claim_filter = request.GET.get('claim', '')
     if claim_filter == 'unclaimed':
         found_items = found_items.filter(claimed_by__isnull=True)
     elif claim_filter == 'claimed':
         found_items = found_items.filter(claimed_by__isnull=False)
-    
-    # Filter by date (last 24 hours)
+
+    # Date filter
     date_filter = request.GET.get('date', '')
     if date_filter == 'today':
-        from django.utils import timezone
-        from datetime import timedelta
-        yesterday = timezone.now() - timedelta(days=1)
-        found_items = found_items.filter(date_occurred__gte=yesterday)
+        found_items = found_items.filter(date_occurred__gte=timezone.now() - timedelta(days=1))
     elif date_filter == 'week':
-        from django.utils import timezone
-        from datetime import timedelta
-        last_week = timezone.now() - timedelta(days=7)
-        found_items = found_items.filter(date_occurred__gte=last_week)
-    
+        found_items = found_items.filter(date_occurred__gte=timezone.now() - timedelta(days=7))
+
     # Pagination
-    paginator = Paginator(found_items, 10)  # Show 10 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    # Get unique categories for filter
-    categories = Item.CATEGORY_CHOICES
-    
+    paginator = Paginator(found_items, 10)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
     context = {
         'found_items': page_obj,
-        'categories': categories,
+        'categories': Item.CATEGORY_CHOICES,
         'search_query': search_query,
         'selected_category': category_filter,
         'selected_date': date_filter,
@@ -270,11 +240,66 @@ def found_item(request):
     
     return render(request, 'Lost_Found/studentPage/found-item.html', context)
 
+
+
+@login_required
 def my_report(request):
-    return render(request , 'Lost_Found/studentPage/my-report.html')
+    # Get all items reported by the current user
+    user_items = Item.objects.filter(reported_by=request.user)
+    
+    # Get counts for stats
+    myReports = user_items.count()
+    
+    # Get counts by status (adjust field names based on your model)
+    # Assuming you have a 'status' field with choices 'lost', 'found', 'claimed'
+    lost_count = user_items.filter(status='lost').count()
+    found_count = user_items.filter(status='found').count()
+    claimed_count = user_items.filter(status='claimed').count()
+    
+    # If your model doesn't have status, but has item_type instead:
+    # lost_count = user_items.filter(item_type='lost').count()
+    # found_count = user_items.filter(item_type='found').count()
+    # claimed_count = user_items.filter(claimed_by__isnull=False).count()
+    
+    # Get all items for display, ordered by most recent
+    items = user_items.order_by('-date_reported')
+    
+    # Get category choices from Item model
+    # First, check what your category field is called
+    category_choices = []
+    
+    try:
+        # Try to get CATEGORY_CHOICES from the Item model
+        if hasattr(Item, 'CATEGORY_CHOICES'):
+            category_choices = Item.CATEGORY_CHOICES
+        elif hasattr(Item, 'CATEGORIES'):
+            category_choices = Item.CATEGORIES
+        elif hasattr(Item, 'category'):  # Get choices from field
+            category_field = Item._meta.get_field('category')
+            if hasattr(category_field, 'choices') and category_field.choices:
+                category_choices = category_field.choices
+    except:
+        # Fallback categories if not defined
+        category_choices = [
+            ('electronics', 'Electronics'),
+            ('documents', 'Documents'),
+            ('clothing', 'Clothing'),
+            ('accessories', 'Accessories'),
+            ('books', 'Books'),
+            ('other', 'Other'),
+        ]
+    
+    context = {
+        'myReports': myReports,
+        'lost_count': lost_count,
+        'found_count': found_count,
+        'claimed_count': claimed_count,
+        'items': items,
+        'categories': category_choices,
+    }
+    return render(request, 'Lost_Found/studentPage/my-report.html', context)
 
-
-# ============= Admin Dashbard =========
+# ================= ADMIN DASHBOARD ==================
 def admin_dashboard(request):
     if not request.user.is_authenticated or request.user.user_type != 'admin':
         return redirect('my_login')

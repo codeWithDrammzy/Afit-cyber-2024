@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.core.exceptions import ValidationError
 
+
+
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
         ('student', 'Student'),
@@ -52,6 +54,8 @@ class User(AbstractUser):
             
             # Update with cleaned value
             self.phone_number = phone_digits
+
+
 
 class Department(models.Model):
     name = models.CharField(max_length=100, unique=True)
