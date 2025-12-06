@@ -198,12 +198,7 @@
                             {% if item.claimed_by %}
                             <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
                                 <div class="flex items-center space-x-2">
-                                    <i class="fas fa-check-circle text-blue-600"></i>
-                                    <span class="font-semibold text-blue-700">CLAIMED</span>
-                                    <span class="text-blue-600 text-sm">
-                                        by {{ item.claimed_by.get_full_name|default:item.claimed_by.username }}
-                                        on {{ item.date_claimed|date:"M d, Y" }}
-                                    </span>
+                                   Item owner will contact you, Please confirm  matric  from thier ID card
                                 </div>
                             </div>
                             {% elif forloop.first %}
@@ -230,36 +225,37 @@
                             <span class="text-gray-600">
                                 <i class="fas fa-calendar mr-1"></i> Reported: {{ item.date_reported|date:"M d, Y" }}
                             </span>
-                            {% if item.claimed_by %}
-                            <span class="text-blue-600">
-                                <i class="fas fa-user-check mr-1"></i> Claimed
-                            </span>
-                            {% else %}
-                            <span class="text-green-600">
-                                <i class="fas fa-hand-paper mr-1"></i> Unclaimed
-                            </span>
-                            {% endif %}
+                            <!-- In the claim status section of found-item.html -->
+                                {% if item.claimed_by %}
+                                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-check-circle text-blue-600"></i>
+                                        <span class="font-semibold text-blue-700">CLAIMED</span>
+                                        <span class="text-blue-600 text-sm">
+                                            by 
+                                            {% if item.claimed_by == request.user %}
+                                                <strong>You</strong>
+                                            {% else %}
+                                                {{ item.claimed_by.get_full_name|default:item.claimed_by.username }}
+                                            {% endif %}
+                                            on {{ item.date_claimed|date:"M d, Y" }}
+                                        </span>
+                                    </div>
+                                </div>
+                                {% endif %}
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
                     <div class="flex space-x-2">
                         {% if not item.claimed_by %}
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors claim-btn"
-                                data-item-id="{{ item.id }}"
-                                data-item-title="{{ item.title }}">
-                            <i class="fas fa-hand-paper mr-2"></i>Claim This Item
-                        </button>
-                        {% else %}
-                        <button class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed" disabled>
-                            <i class="fas fa-hand-paper mr-2"></i>Already Claimed
-                        </button>
+                            <a href="{% url 'claim_confirmation' item.id %}" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center">
+                                <i class="fas fa-hand-paper mr-2"></i>Claim This Item
+                            </a>
                         {% endif %}
                         
-                        <a href="" 
-                           class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors inline-flex items-center">
-                            <i class="fas fa-info-circle mr-2"></i>View Details
-                        </a>
+                    
                     </div>
                 </div>
             </div>

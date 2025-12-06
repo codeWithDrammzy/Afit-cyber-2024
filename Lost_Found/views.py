@@ -56,21 +56,14 @@ def register_page(request):
 
 
 def my_login(request):
-    print("=== LOGIN VIEW CALLED ===")
     
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
         
-        print(f"📝 DEBUG: Username from form: '{username}'")
-        print(f"📝 DEBUG: Password length: {len(password)}")
-        
-        # Validate inputs
         if not username or not password:
             messages.error(request, 'Please provide both matric number/email and password.')
             return render(request, "Lost_Found/homePages/my-login.html")
-        
-        # Authenticate using custom backend
         user = authenticate(request, username=username, password=password)
         
         print(f"👤 DEBUG: Authentication result: {user}")
@@ -80,14 +73,13 @@ def my_login(request):
             print(f"✅ DEBUG: Login successful for: {user.username}")
             messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
             
-            # Check if user is verified
             if not user.is_verified:
                 messages.warning(request, 'Please verify your email address to access all features.')
             
             # Redirect based on user type
             if user.user_type == 'admin':
                 return redirect('admin_dashboard')
-            else:  # student
+            else:  
                 return redirect('std-board')
         else:
             print("❌ DEBUG: Authentication failed")
@@ -242,6 +234,68 @@ def found_item(request):
 
 
 
+# ================= CLAIM ITEM ==================
+@login_required
+def claim_item(request, item_id):
+
+    try:
+        item = Item.objects.get(id=item_id)
+        if item.status != 'found':
+            messages.error(request, 'Only found items can be claimed.')
+            return redirect('found-item')
+        
+        if item.claimed_by:
+            messages.error(request, 'This item has already been claimed.')
+            return redirect('found-item')
+        
+        if item.reported_by == request.user:
+            messages.error(request, 'You cannot claim your own found item.')
+            return redirect('found-item')
+        
+        item.claimed_by = request.user
+        item.date_claimed = timezone.now()
+        item.save()
+        
+        messages.success(
+            request, 
+            f'You have successfully claimed "{item.title}". '
+            f'The finder ({item.reported_by.get_full_name() or item.reported_by.username}) will contact you.'
+        )
+        
+        # Redirect back to found items or referer
+        redirect_url = request.META.get('HTTP_REFERER', 'found-item')
+        return redirect(redirect_url)
+        
+    except Item.DoesNotExist:
+        messages.error(request, 'Item not found.')
+        return redirect('found-item')
+    except Exception as e:
+        messages.error(request, f'An error occurred: {str(e)}')
+        return redirect('found-item')
+
+@login_required
+def claim_confirmation(request, item_id):
+    try:
+        item = Item.objects.get(id=item_id)
+        if item.status != 'found':
+            messages.error(request, 'Only found items can be claimed.')
+            return redirect('found-item')
+        if item.claimed_by:
+            messages.error(request, 'This item has already been claimed.')
+            return redirect('found-item')
+        if item.reported_by == request.user:
+            messages.error(request, 'You cannot claim your own found item.')
+            return redirect('found-item')
+        
+        context = {
+            'item': item,
+            'finder': item.reported_by,
+        }
+        return render(request, 'Lost_Found/studentPage/claim-confirmation.html', context)
+    except Item.DoesNotExist:
+        messages.error(request, 'Item not found.')
+        return redirect('found-item')
+
 @login_required
 def my_report(request):
     # Get all items reported by the current user
@@ -298,6 +352,87 @@ def my_report(request):
         'categories': category_choices,
     }
     return render(request, 'Lost_Found/studentPage/my-report.html', context)
+
+# ================= MARK ITEM AS FOUND ==================
+@login_required
+def mark_as_found(request, item_id):
+   
+    try:
+        item = Item.objects.get(id=item_id)
+        if item.status != 'lost':
+            messages.error(request, 'Only lost items can be marked as found.')
+            return redirect('lost-item')
+        
+        if item.reported_by == request.user:
+            messages.error(request, 'You cannot mark your own lost item as found.')
+            return redirect('lost-item')
+        item.status = 'found'
+        item.location_found = request.POST.get('found_location', 'Not specified')
+        item.save()
+        
+
+        messages.success(
+            request, 
+            f'You have marked "{item.title}" as found! '
+            f'The owner ({item.reported_by.get_full_name() or item.reported_by.username}) has been notified.'
+        )
+        
+        redirect_url = request.META.get('HTTP_REFERER', 'lost-item')
+        return redirect(redirect_url)
+        
+    except Item.DoesNotExist:
+        messages.error(request, 'Item not found.')
+        return redirect('lost-item')
+    except Exception as e:
+        messages.error(request, f'An error occurred: {str(e)}')
+        return redirect('lost-item')
+
+
+# views.py - Add this view
+@login_required
+def found_confirmation(request, item_id):
+    try:
+        item = Item.objects.get(id=item_id)
+        
+        # Check if item is lost
+        if item.status != 'lost':
+            messages.error(request, 'Only lost items can be marked as found.')
+            return redirect('lost-item')
+        
+        if item.reported_by == request.user:
+            messages.error(request, 'You cannot mark your own lost item as found.')
+            return redirect('lost-item')
+        
+        if request.method == 'POST':
+            # Handle form submission
+            found_location = request.POST.get('found_location', '')
+            
+            if not found_location:
+                messages.error(request, 'Please provide where you found the item.')
+                return redirect('found_confirmation', item_id=item_id)
+            
+            # Update item
+            item.status = 'found'
+            item.location_found = found_location
+            item.save()
+            
+            messages.success(
+                request, 
+                f'You have marked "{item.title}" as found! '
+                f'The owner has been notified.'
+            )
+            return redirect('lost-item')
+        
+        context = {
+            'item': item,
+            'owner': item.reported_by,
+        }
+        
+        return render(request, 'Lost_Found/studentPage/found-confirmation.html', context)
+        
+    except Item.DoesNotExist:
+        messages.error(request, 'Item not found.')
+        return redirect('lost-item')
 
 # ================= ADMIN DASHBOARD ==================
 def admin_dashboard(request):

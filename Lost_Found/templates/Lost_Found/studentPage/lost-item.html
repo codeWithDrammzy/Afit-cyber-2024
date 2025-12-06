@@ -222,15 +222,13 @@
                     
                     <!-- Action Buttons -->
                     <div class="flex space-x-2">
-                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors found-btn"
-                                data-item-id="{{ item.id }}"
-                                data-item-title="{{ item.title }}">
-                            <i class="fas fa-check-circle mr-2"></i>I Found This!
-                        </button>
-                        <a href="" 
-                           class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors inline-flex items-center">
-                            <i class="fas fa-info-circle mr-2"></i>View Details
-                        </a>
+                        {% if item.status == 'lost' %}
+                            <a href="{% url 'found_confirmation' item.id %}" 
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>I Found This!
+                            </a>
+                        {% endif %}
+                      
                     </div>
                 </div>
             </div>
@@ -295,109 +293,6 @@
     </div>
     {% endif %}
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // "I Found This!" button functionality
-    const foundButtons = document.querySelectorAll('.found-btn');
-    foundButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemId = this.getAttribute('data-item-id');
-            const itemTitle = this.getAttribute('data-item-title');
-            
-            if (confirm(`Are you sure you found "${itemTitle}"? This will notify the owner.`)) {
-                // Show loading state
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Connecting...';
-                this.disabled = true;
-                
-                // Send AJAX request to mark as found
-                fetch(`/api/mark-found/${itemId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        found_by_user_id: '{{ request.user.id }}'
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('The owner has been notified! They will contact you soon to arrange pickup.');
-                        this.innerHTML = '<i class="fas fa-check mr-2"></i>Owner Notified';
-                        this.classList.remove('bg-green-600', 'hover:bg-green-700');
-                        this.classList.add('bg-gray-400');
-                        
-                        // Update the item status visually
-                        const statusBadge = this.closest('.bg-white.rounded-xl').querySelector('.bg-red-100');
-                        if (statusBadge) {
-                            statusBadge.innerHTML = 'FOUND • PENDING PICKUP';
-                            statusBadge.classList.remove('bg-red-100', 'text-red-700');
-                            statusBadge.classList.add('bg-green-100', 'text-green-700');
-                        }
-                    } else {
-                        alert('Error: ' + data.error);
-                        this.innerHTML = originalText;
-                        this.disabled = false;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                });
-            }
-        });
-    });
-    
-    // Search functionality with debounce
-    let searchTimer;
-    const searchInput = document.querySelector('input[name="search"]');
-    if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                this.closest('form').submit();
-            }, 500);
-        });
-    }
-    
-    // Filter chips highlight on click
-    const filterChips = document.querySelectorAll('a.bg-gray-100');
-    filterChips.forEach(chip => {
-        chip.addEventListener('click', function(e) {
-            // Remove active state from all chips
-            filterChips.forEach(c => {
-                c.classList.remove('bg-red-100', 'text-red-700');
-                c.classList.add('bg-gray-100', 'text-gray-700');
-            });
-            
-            // Add active state to clicked chip
-            this.classList.remove('bg-gray-100', 'text-gray-700');
-            this.classList.add('bg-red-100', 'text-red-700');
-        });
-    });
-    
-    // Helper function to get CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-});
-</script>
 
 <style>
 /* Smooth transitions */

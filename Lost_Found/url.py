@@ -16,6 +16,11 @@ urlpatterns = [
     path('report-item/', views.report_item, name='report-item'),
     path('my-report/', views.my_report, name='my-report'),
 
+    path('claim-item/<int:item_id>/', views.claim_item, name='claim_item'),
+    path('claim-confirm/<int:item_id>/', views.claim_confirmation, name='claim_confirmation'),
+    path('mark-found/<int:item_id>/', views.mark_as_found, name='mark_found'),
+    path('found-confirm/<int:item_id>/', views.found_confirmation, name='found_confirmation'),
+ 
 
     
 # ============= Admin Urls  =========

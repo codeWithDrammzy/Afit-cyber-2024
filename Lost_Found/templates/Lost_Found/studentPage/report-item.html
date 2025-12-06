@@ -55,35 +55,9 @@
             </div>
         </div>
 
-        <!-- Error Messages -->
-        {% if form.errors %}
-        <div class="mb-8 bg-red-50 border border-red-200 rounded-2xl p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <h3 class="font-semibold text-red-800 mb-2">Please fix the following errors:</h3>
-                    <ul class="list-disc pl-5 text-red-700 text-sm">
-                        {% for field in form %}
-                            {% if field.errors %}
-                                {% for error in field.errors %}
-                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if form.non_field_errors %}
-                            {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+       
 
-        <!-- Success Messages -->
+        {% comment %} <!-- Success Messages -->
         {% if messages %}
         <div class="mb-8">
             {% for message in messages %}
@@ -95,7 +69,7 @@
             </div>
             {% endfor %}
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         <!-- Report Form (Initially Hidden) -->
         <div id="report-form-container" class="hidden">
@@ -361,267 +335,267 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const lostCard = document.getElementById('lost-card');
-    const foundCard = document.getElementById('found-card');
-    const formContainer = document.getElementById('report-form-container');
-    const statusField = document.getElementById('status-field');
-    const formTitle = document.getElementById('form-title');
-    const formSubtitle = document.getElementById('form-subtitle');
-    const selectedStatusSpan = document.getElementById('selected-status');
-    const statusIndicator = document.getElementById('status-indicator');
-    const changeStatusBtn = document.getElementById('change-status-btn');
-    const cancelFormBtn = document.getElementById('cancel-form-btn');
-    const locationFoundSection = document.getElementById('location-found-section');
-    const locationLostSection = document.getElementById('location-lost-section');
-    const locationFoundInput = document.getElementById('id_location_found');
-    const locationLostInput = document.getElementById('id_location_lost');
-    
-    // Check if form has errors (form is already visible)
-    const hasFormErrors = document.querySelector('.bg-red-50') !== null;
-    
-    if (hasFormErrors) {
-        // If form has errors, show the form immediately
-        formContainer.classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const lostCard = document.getElementById('lost-card');
+        const foundCard = document.getElementById('found-card');
+        const formContainer = document.getElementById('report-form-container');
+        const statusField = document.getElementById('status-field');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const selectedStatusSpan = document.getElementById('selected-status');
+        const statusIndicator = document.getElementById('status-indicator');
+        const changeStatusBtn = document.getElementById('change-status-btn');
+        const cancelFormBtn = document.getElementById('cancel-form-btn');
+        const locationFoundSection = document.getElementById('location-found-section');
+        const locationLostSection = document.getElementById('location-lost-section');
+        const locationFoundInput = document.getElementById('id_location_found');
+        const locationLostInput = document.getElementById('id_location_lost');
         
-        // Set initial state based on form value
-        const initialStatus = document.querySelector('input[name="status"]');
-        if (initialStatus && initialStatus.value === 'found') {
-            setStatus('found');
+        // Check if form has errors (form is already visible)
+        const hasFormErrors = document.querySelector('.bg-red-50') !== null;
+        
+        if (hasFormErrors) {
+            // If form has errors, show the form immediately
+            formContainer.classList.remove('hidden');
+            
+            // Set initial state based on form value
+            const initialStatus = document.querySelector('input[name="status"]');
+            if (initialStatus && initialStatus.value === 'found') {
+                setStatus('found');
+            } else {
+                setStatus('lost');
+            }
         } else {
-            setStatus('lost');
+            // Default to showing selection cards
+            formContainer.classList.add('hidden');
         }
-    } else {
-        // Default to showing selection cards
-        formContainer.classList.add('hidden');
-    }
-    
-    // Set status function
-    function setStatus(status) {
-        // Update hidden field
-        statusField.value = status;
         
-        // Update UI based on status
-        if (status === 'lost') {
-            // Update cards
-            lostCard.classList.add('border-red-500', 'bg-red-50');
-            foundCard.classList.remove('border-green-500', 'bg-green-50');
+        // Set status function
+        function setStatus(status) {
+            // Update hidden field
+            statusField.value = status;
             
-            // Update form title
-            formTitle.innerHTML = 'Report <span id="selected-status">Lost</span> Item';
-            formSubtitle.textContent = 'Please provide details about your missing item';
-            
-            // Update status indicator
-            statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i><span class="font-medium">Reporting a Lost Item</span>';
-            statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-red-100 text-red-700';
-            
-            // Update location fields
-            locationFoundSection.style.display = 'none';
-            locationLostSection.style.display = 'block';
-            locationFoundInput.required = false;
-            locationLostInput.required = true;
-            
-        } else if (status === 'found') {
-            // Update cards
-            lostCard.classList.remove('border-red-500', 'bg-red-50');
-            foundCard.classList.add('border-green-500', 'bg-green-50');
-            
-            // Update form title
-            formTitle.innerHTML = 'Report <span id="selected-status">Found</span> Item';
-            formSubtitle.textContent = 'Please provide details about the found item';
-            
-            // Update status indicator
-            statusIndicator.innerHTML = '<i class="fas fa-hand-holding-heart mr-2"></i><span class="font-medium">Reporting a Found Item</span>';
-            statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-green-100 text-green-700';
-            
-            // Update location fields
-            locationFoundSection.style.display = 'block';
-            locationLostSection.style.display = 'none';
-            locationFoundInput.required = true;
-            locationLostInput.required = false;
+            // Update UI based on status
+            if (status === 'lost') {
+                // Update cards
+                lostCard.classList.add('border-red-500', 'bg-red-50');
+                foundCard.classList.remove('border-green-500', 'bg-green-50');
+                
+                // Update form title
+                formTitle.innerHTML = 'Report <span id="selected-status">Lost</span> Item';
+                formSubtitle.textContent = 'Please provide details about your missing item';
+                
+                // Update status indicator
+                statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i><span class="font-medium">Reporting a Lost Item</span>';
+                statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-red-100 text-red-700';
+                
+                // Update location fields
+                locationFoundSection.style.display = 'none';
+                locationLostSection.style.display = 'block';
+                locationFoundInput.required = false;
+                locationLostInput.required = true;
+                
+            } else if (status === 'found') {
+                // Update cards
+                lostCard.classList.remove('border-red-500', 'bg-red-50');
+                foundCard.classList.add('border-green-500', 'bg-green-50');
+                
+                // Update form title
+                formTitle.innerHTML = 'Report <span id="selected-status">Found</span> Item';
+                formSubtitle.textContent = 'Please provide details about the found item';
+                
+                // Update status indicator
+                statusIndicator.innerHTML = '<i class="fas fa-hand-holding-heart mr-2"></i><span class="font-medium">Reporting a Found Item</span>';
+                statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-green-100 text-green-700';
+                
+                // Update location fields
+                locationFoundSection.style.display = 'block';
+                locationLostSection.style.display = 'none';
+                locationFoundInput.required = true;
+                locationLostInput.required = false;
+            }
         }
-    }
-    
-    // Event Listeners
-    lostCard.addEventListener('click', function() {
-        setStatus('lost');
-        formContainer.classList.remove('hidden');
-        // Scroll to form
-        formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    
-    foundCard.addEventListener('click', function() {
-        setStatus('found');
-        formContainer.classList.remove('hidden');
-        // Scroll to form
-        formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    
-    changeStatusBtn.addEventListener('click', function() {
-        // Hide form and show selection cards
-        formContainer.classList.add('hidden');
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    cancelFormBtn.addEventListener('click', function() {
-        // Hide form and show selection cards
-        formContainer.classList.add('hidden');
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    // Initialize category selection
-    const categoryRadios = document.querySelectorAll('input[name="category"]');
-    categoryRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            // Remove all checked styles first
-            document.querySelectorAll('label[for^="id_category_"]').forEach(label => {
-                label.classList.remove('border-blue-500', 'bg-blue-50');
+        
+        // Event Listeners
+        lostCard.addEventListener('click', function() {
+            setStatus('lost');
+            formContainer.classList.remove('hidden');
+            // Scroll to form
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        foundCard.addEventListener('click', function() {
+            setStatus('found');
+            formContainer.classList.remove('hidden');
+            // Scroll to form
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        changeStatusBtn.addEventListener('click', function() {
+            // Hide form and show selection cards
+            formContainer.classList.add('hidden');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        cancelFormBtn.addEventListener('click', function() {
+            // Hide form and show selection cards
+            formContainer.classList.add('hidden');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Initialize category selection
+        const categoryRadios = document.querySelectorAll('input[name="category"]');
+        categoryRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove all checked styles first
+                document.querySelectorAll('label[for^="id_category_"]').forEach(label => {
+                    label.classList.remove('border-blue-500', 'bg-blue-50');
+                });
+                
+                // Add style to selected
+                if (this.checked) {
+                    const label = document.querySelector(`label[for="${this.id}"]`);
+                    label.classList.add('border-blue-500', 'bg-blue-50');
+                }
             });
             
-            // Add style to selected
-            if (this.checked) {
-                const label = document.querySelector(`label[for="${this.id}"]`);
+            // Set initial state for categories
+            if (radio.checked) {
+                const label = document.querySelector(`label[for="${radio.id}"]`);
                 label.classList.add('border-blue-500', 'bg-blue-50');
             }
         });
         
-        // Set initial state for categories
-        if (radio.checked) {
-            const label = document.querySelector(`label[for="${radio.id}"]`);
-            label.classList.add('border-blue-500', 'bg-blue-50');
+        // Set default date to now if empty
+        const dateInput = document.getElementById('id_date_occurred');
+        if (!dateInput.value) {
+            const now = new Date();
+            // Format for datetime-local input
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
         }
     });
-    
-    // Set default date to now if empty
-    const dateInput = document.getElementById('id_date_occurred');
-    if (!dateInput.value) {
-        const now = new Date();
-        // Format for datetime-local input
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-});
 
-// Image preview functionality
-function previewImage(event) {
-    const input = event.target;
-    const fileName = input.files[0] ? input.files[0].name : 'No file chosen';
-    document.getElementById('file-name').textContent = fileName;
-    
-    const preview = document.getElementById('preview');
-    const previewContainer = document.getElementById('image-preview');
-    
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
+    // Image preview functionality
+    function previewImage(event) {
+        const input = event.target;
+        const fileName = input.files[0] ? input.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
         
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            previewContainer.classList.remove('hidden');
+        const preview = document.getElementById('preview');
+        const previewContainer = document.getElementById('image-preview');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
         }
-        
-        reader.readAsDataURL(input.files[0]);
     }
-}
 
-function removeImage() {
-    const input = document.getElementById('id_image');
-    const previewContainer = document.getElementById('image-preview');
-    const fileName = document.getElementById('file-name');
-    
-    input.value = '';
-    previewContainer.classList.add('hidden');
-    fileName.textContent = 'No file chosen';
-}
+    function removeImage() {
+        const input = document.getElementById('id_image');
+        const previewContainer = document.getElementById('image-preview');
+        const fileName = document.getElementById('file-name');
+        
+        input.value = '';
+        previewContainer.classList.add('hidden');
+        fileName.textContent = 'No file chosen';
+    }
 
-// Form validation before submit
-document.getElementById('report-form').addEventListener('submit', function(e) {
-    console.log('Form submitted - Status:', document.getElementById('status-field').value);
-});
+    // Form validation before submit
+    document.getElementById('report-form').addEventListener('submit', function(e) {
+        console.log('Form submitted - Status:', document.getElementById('status-field').value);
+    });
 </script>
 
 <style>
-/* Selection Cards */
-#lost-card, #found-card {
-    transition: all 0.3s ease;
-}
+    /* Selection Cards */
+    #lost-card, #found-card {
+        transition: all 0.3s ease;
+    }
 
-#lost-card:hover {
-    border-color: #ef4444;
-    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.1);
-}
+    #lost-card:hover {
+        border-color: #ef4444;
+        box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.1);
+    }
 
-#found-card:hover {
-    border-color: #10b981;
-    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
-}
+    #found-card:hover {
+        border-color: #10b981;
+        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+    }
 
-/* Form transitions */
-#report-form-container {
-    animation: slideDown 0.3s ease-out;
-}
+    /* Form transitions */
+    #report-form-container {
+        animation: slideDown 0.3s ease-out;
+    }
 
-@keyframes slideDown {
-    from {
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Category selection styling */
+    input[type="radio"]:checked + label {
+        border-color: #3b82f6;
+        background-color: #eff6ff;
+    }
+
+    /* Hide default radio buttons */
+    input[type="radio"] {
+        position: absolute;
         opacity: 0;
-        transform: translateY(-20px);
+        width: 0;
+        height: 0;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    /* File upload hover effect */
+    input[type="file"] + label:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
     }
-}
 
-/* Category selection styling */
-input[type="radio"]:checked + label {
-    border-color: #3b82f6;
-    background-color: #eff6ff;
-}
+    /* Form validation styling */
+    input:invalid, textarea:invalid {
+        border-color: #ef4444;
+    }
 
-/* Hide default radio buttons */
-input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+    input:focus:invalid, textarea:focus:invalid {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
 
-/* File upload hover effect */
-input[type="file"] + label:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-}
+    /* Form elements */
+    input, textarea {
+        border: 1px solid #d1d5db;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        width: 100%;
+    }
 
-/* Form validation styling */
-input:invalid, textarea:invalid {
-    border-color: #ef4444;
-}
-
-input:focus:invalid, textarea:focus:invalid {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-/* Form elements */
-input, textarea {
-    border: 1px solid #d1d5db;
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    width: 100%;
-}
-
-input:focus, textarea:focus {
-    outline: none;
-    ring: 2px;
-    ring-color: #3b82f6;
-    border-color: #3b82f6;
-}
+    input:focus, textarea:focus {
+        outline: none;
+        ring: 2px;
+        ring-color: #3b82f6;
+        border-color: #3b82f6;
+    }
 </style>
 {% endblock %}
