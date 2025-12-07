@@ -34,9 +34,9 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{% url 'index' %}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Report Item</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Browse Items</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">FAQ</a>
+                    <a href="{% url 'my-report' %}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Report Item</a>
+                    <a href="{% url 'index' %}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Browse Items</a>
+                    <a href="{% url 'index' %}" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">FAQ</a>
                 </div>
 
                 <!-- Auth Buttons -->
@@ -61,7 +61,7 @@
             <div id="mobile-menu" class="md:hidden hidden">
                 <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
                     <a href="{% url 'index' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Home</a>
-                    <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Report Item</a>
+                    <a href="{% url 'my-report' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Report Item</a>
                     <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">Browse Items</a>
                     <a href="#" class="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium">FAQ</a>
                     <div class="border-t pt-3 space-y-2">
