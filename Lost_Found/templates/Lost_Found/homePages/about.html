@@ -1,0 +1,436 @@
+{% extends 'Lost_Found/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center justify-center py-20 px-4" style="background-image: linear-gradient(rgba(26, 75, 140, 0.85), rgba(26, 75, 140, 0.9)), url('{% static 'images/afit2.jpg' %}')">
+    <div class="max-w-7xl mx-auto text-center text-white">
+        <!-- AFIT Logo -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white p-4 rounded-2xl shadow-2xl">
+                <img src="{% static 'images/logo.jpg' %}" alt="AFIT Logo" 
+                     class="w-32 h-32 object-cover rounded-full"
+                     onerror="this.src='https://via.placeholder.com/128/1a4b8c/ffffff?text=AFIT'">
+            </div>
+        </div>
+        
+        <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+            AFIT Lost & Found
+            <span class="text-blue-200 block text-3xl lg:text-5xl mt-6">A Cyber Security Class Project</span>
+        </h1>
+        
+        <p class="text-xl lg:text-2xl mb-12 text-blue-100 leading-relaxed max-w-4xl mx-auto">
+            Developed by the Cyber Security Department, Class of 2024 - AFIT
+        </p>
+        
+        <!-- Project Badge -->
+        <div class="inline-block bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg mb-16">
+            <i class="fas fa-graduation-cap mr-2"></i>ENT201 Entrepreneurship Project
+        </div>
+    </div>
+</section>
+
+<!-- Class Pride Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6">A Project of Pride</h2>
+            <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                This platform represents the collective effort and dedication of the entire Cyber Security Class of 2024. 
+                It showcases our ability to apply technical knowledge to solve real-world problems within our AFIT community.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Technical Excellence -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-200">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-laptop-code text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Technical Excellence</h3>
+                <p class="text-gray-600 text-center">
+                    Demonstrating our proficiency in web development, database management, and cyber security principles
+                </p>
+            </div>
+            
+            <!-- Community Service -->
+            <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-3xl p-8 border border-green-200">
+                <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-hands-helping text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Community Service</h3>
+                <p class="text-gray-600 text-center">
+                    Contributing to campus welfare by solving the common problem of lost and found items
+                </p>
+            </div>
+            
+            <!-- Entrepreneurship -->
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-200">
+                <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-lightbulb text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Entrepreneurship</h3>
+                <p class="text-gray-600 text-center">
+                    Applying entrepreneurial thinking to create sustainable digital solutions for campus needs
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leadership Team -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Project Leadership</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Guided by dedicated team leaders who coordinated the efforts of the entire Cyber Security class
+            </p>
+        </div>
+        
+        <!-- Leadership Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Team Lead -->
+            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <div class="w-32 h-32 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-crown text-white text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Project Lead</h3>
+                <p class="text-blue-600 font-semibold text-lg mb-1">Dawud Aliyu Ahmad</p>
+                <p class="text-gray-600 mb-4">Overall Project Coordination</p>
+                <div class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Lead Developer
+                </div>
+            </div>
+            
+            <!-- Assistant Leads -->
+            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <div class="w-32 h-32 bg-gradient-to-br from-green-600 to-teal-700 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-user-friends text-white text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Assistant Leads</h3>
+                <div class="space-y-2 mb-4">
+                     
+                    <p class="text-green-600 font-semibold">Owen  Ezinkwo</p>
+                    <p class="text-green-600 font-semibold">Muhammad Kamal </p>
+                    <p class="text-green-600 font-semibold">Yahaya Sofiat Bose </p>
+                </div>
+                <div class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Team Coordination
+                </div>
+            </div>
+            
+            <!-- Technical Leads -->
+            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <div class="w-32 h-32 bg-gradient-to-br from-purple-600 to-pink-700 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-code text-white text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Technical Leads</h3>
+                <div class="space-y-2 mb-4">
+                    <p class="text-purple-600 font-semibold">Frontend Team</p>
+                    <p class="text-purple-600 font-semibold"> Kiisi </p>
+                    <p class="text-purple-600 font-semibold">Victor Owolabi </p>
+                    <p class="text-purple-600 font-semibold">Ahmad Umar</p>
+                </div>
+                <div class="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Technical Direction
+                </div>
+            </div>
+            
+            <!-- Class Representatives -->
+            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <div class="w-32 h-32 bg-gradient-to-br from-orange-600 to-red-700 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fas fa-users text-white text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Class Contributors</h3>
+                <p class="text-orange-600 font-semibold text-lg mb-1">Cyber Security 2024</p>
+                <p class="text-gray-600 mb-4">Entire Class Participation</p>
+                <div class="inline-block bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Collective Effort
+                </div>
+            </div>
+        </div>
+        
+        <!-- Leadership Note -->
+        <div class="mt-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 text-center text-white shadow-xl">
+            <h3 class="text-2xl font-bold mb-4">Collaborative Leadership</h3>
+            <p class="text-lg text-blue-100 max-w-3xl mx-auto">
+                Under the guidance of our project lead Dawud Aliyu Ahmad, with support from assistant leads OWOLABI VICTOR UBANI, AHMAD BAPPAH UMAR, and EZINKWO LEVI OWEN, 
+                we successfully coordinated the talents of our entire Cyber Security class to deliver this comprehensive solution.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Class Appreciation -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Acknowledging Our Class</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Special recognition to every Cyber Security student who contributed to this project's success
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Class Photo/Representation -->
+            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 flex flex-col items-center justify-center">
+                <div class="w-64 h-64 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-user-graduate text-white text-8xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Cyber Security Class of 2024</h3>
+                <p class="text-gray-600 text-center">
+                    The brilliant minds behind this project. Your dedication, skills, and teamwork made this possible.
+                </p>
+            </div>
+            
+            <!-- Appreciation List -->
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Our Appreciation</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>To every team member who contributed code and ideas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>To those who provided testing and feedback</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>To the documentation and design teams</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>To everyone who supported this initiative</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Class Legacy</h3>
+                    <p class="text-gray-600">
+                        This project stands as a testament to what our Cyber Security class can achieve when we work together. 
+                        It represents our technical capabilities and our commitment to improving campus life.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Special Mention -->
+        <div class="mt-12 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-3xl p-8 border border-yellow-200">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-star text-yellow-500 text-3xl mr-4"></i>
+                <h3 class="text-2xl font-bold text-gray-800">Special Thanks</h3>
+            </div>
+            <p class="text-gray-700 text-lg">
+                We extend our gratitude to our ENT201 lecturer for guiding us through this entrepreneurial journey, 
+                and to AFIT for providing the environment where we could develop and apply our cyber security skills 
+                to create meaningful solutions for our community.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Project Development -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">Development Process</h2>
+        <p class="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+            How our Cyber Security class collaborated to build this platform
+        </p>
+        
+        <!-- Timeline -->
+        <div class="relative">
+            <!-- Timeline Line -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-200"></div>
+            
+            <!-- Timeline Items -->
+            <div class="space-y-12">
+                <!-- Phase 1 -->
+                <div class="flex items-center">
+                    <div class="w-1/2 pr-12 text-right">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <div class="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-2">
+                                Phase 1
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Planning & Design</h3>
+                            <p class="text-gray-600">Class-wide brainstorming sessions and requirement gathering</p>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute left-1/2 transform -translate-x-1/2">
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-1/2"></div>
+                </div>
+                
+                <!-- Phase 2 -->
+                <div class="flex items-center">
+                    <div class="w-1/2"></div>
+                    
+                    <div class="absolute left-1/2 transform -translate-x-1/2">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-1/2 pl-12">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <div class="inline-block bg-green-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-2">
+                                Phase 2
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Team Assignments</h3>
+                            <p class="text-gray-600">Division into frontend, backend, security, and testing teams</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Phase 3 -->
+                <div class="flex items-center">
+                    <div class="w-1/2 pr-12 text-right">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <div class="inline-block bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-2">
+                                Phase 3
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Development Sprint</h3>
+                            <p class="text-gray-600">Coordinated coding sessions with regular team sync-ups</p>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute left-1/2 transform -translate-x-1/2">
+                        <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">3</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-1/2"></div>
+                </div>
+                
+                <!-- Phase 4 -->
+                <div class="flex items-center">
+                    <div class="w-1/2"></div>
+                    
+                    <div class="absolute left-1/2 transform -translate-x-1/2">
+                        <div class="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-1/2 pl-12">
+                        <div class="bg-white p-6 rounded-2xl shadow-lg">
+                            <div class="inline-block bg-orange-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-2">
+                                Phase 4
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Testing & Deployment</h3>
+                            <p class="text-gray-600">Class-wide testing and final deployment to campus network</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Class Legacy -->
+<section class="py-20 bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-6">Our Class Legacy</h2>
+        
+        <div class="max-w-3xl mx-auto">
+            <p class="text-xl text-blue-100 mb-8">
+                As Cyber Security students, we understand the importance of secure systems. 
+                This project allowed us to apply our knowledge to create a safe, reliable platform 
+                for our AFIT community while fulfilling our ENT201 course requirements.
+            </p>
+            
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-3xl p-8 border border-white border-opacity-20">
+                <h3 class="text-2xl font-bold mb-4">A Message From Our Class</h3>
+                <p class="text-lg text-blue-100 italic">
+                    "We, the Cyber Security Class of 2024, are proud to present this platform as a demonstration 
+                    of our capabilities and our commitment to serving the AFIT community. This project represents 
+                    not just a course requirement, but our dedication to using technology for positive impact."
+                </p>
+            </div>
+        </div>
+        
+        <!-- Class Signature -->
+        <div class="mt-12 pt-8 border-t border-blue-300">
+            <p class="text-2xl font-bold mb-2">Cyber Security Department</p>
+            <p class="text-xl text-blue-200">Class of 2024 - Air Force Institute of Technology</p>
+            <p class="text-blue-300 mt-4">ENT201 Entrepreneurship Course Project</p>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
+<section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold text-gray-800 mb-6">Experience Our Work</h2>
+        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Explore the platform created by our Cyber Security class for the AFIT community
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'index' %}" 
+               class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center justify-center text-lg">
+                <i class="fas fa-home mr-2"></i>Visit Homepage
+            </a>
+            <a href="{% url 'register' %}" 
+               class="bg-green-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center justify-center text-lg">
+                <i class="fas fa-user-plus mr-2"></i>Join Our Platform
+            </a>
+            <a href="{% url 'lost-item' %}" 
+               class="bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center justify-center text-lg">
+                <i class="fas fa-search mr-2"></i>Browse Items
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Final Footer -->
+<section class="py-12 bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-6 md:mb-0">
+                <p class="text-lg">
+                    <i class="fas fa-heart text-red-400 mr-2"></i>
+                    Made with pride by AFIT Cyber Security 2024
+                </p>
+                <p class="text-blue-300 text-sm mt-2">
+                    ENT201 Course Project | All Rights Reserved
+                </p>
+            </div>
+            
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-300 hover:text-white">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Final Signature -->
+        <div class="mt-8 pt-6 border-t border-gray-700">
+            <p class="text-gray-400">
+                Project Lead: Dawud Aliyu Ahmad | Assistant Leads: Victor, Kiisi, Owen
+            </p>
+            <p class="text-gray-500 text-sm mt-2">
+                In collaboration with the entire Cyber Security Class of 2024
+            </p>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

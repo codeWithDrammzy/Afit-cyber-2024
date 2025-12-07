@@ -12,13 +12,40 @@ from .models import Item, Student, User
 
 
 # ================= HOME & AUTH ==================
+import random
+
 def index(request):
-    return render(request, "Lost_Found/homePages/index.html")
+ 
+    all_items = list(Item.objects.all())
+    
+    # Calculate statistics
+    total_reports = len(all_items)
+    found_items_count = len([item for item in all_items if item.status == 'found'])
+    returned_items_count = len([item for item in all_items if item.status == 'returned'])
+    
+    # Get 4 random items (or all if less than 4)
+    if len(all_items) >= 4:
+        latest_items = random.sample(all_items, 4)
+    elif all_items:
+        latest_items = all_items
+    else:
+        latest_items = []
+    
+    context = {
+        'total_reports': total_reports,
+        'found_items_count': found_items_count,
+        'returned_items_count': returned_items_count,
+        'latest_items': latest_items,
+    }
+    
+    return render(request, "Lost_Found/homePages/index.html", context)
+
+def about(request):
+    return render(request, "Lost_Found/homePages/about.html")
 
 def my_logout(request):
     logout(request)
     return redirect('index')
-
 
 
 def register_page(request):

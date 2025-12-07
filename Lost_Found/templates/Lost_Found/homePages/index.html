@@ -3,322 +3,623 @@
 
 {% block content %}
 
-<!-- Hero Section with Background Image -->
-<section class="min-h-screen bg-cover bg-center bg-fixed flex items-center justify-center py-20" 
+<!-- Hero Section with School Background -->
+<section class="min-h-screen bg-cover bg-center bg-fixed flex items-center justify-center py-20 px-4" 
          style="background-image: linear-gradient(rgba(26, 75, 140, 0.85), rgba(26, 75, 140, 0.9)), url('{% static 'images/afit2.jpg' %}')">
-    <div class="max-w-7xl mx-auto px-4 text-center text-white">
-        <div class="flex flex-col lg:flex-row items-center justify-between">
-            <!-- Left Content -->
-            <div class="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0">
-                <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                    Find Your Lost Items at AFIT
-                </h1>
-                <p class="text-xl lg:text-2xl mb-8 text-blue-100 leading-relaxed">
-                    A secure platform for students and staff to report and search for lost and found items on campus.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="#" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        <i class="fas fa-plus-circle mr-2"></i>Report Lost Item
-                    </a>
-                    <a href="#" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        <i class="fas fa-search mr-2"></i>Browse Found Items
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Right Content -->
-            <div class="lg:w-1/2 flex justify-center">
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm p-8 rounded-2xl border border-white border-opacity-20 max-w-md">
-                    <i class="fas fa-search-location text-6xl text-white mb-4 block"></i>
-                    <h4 class="text-white text-2xl font-semibold mb-3">Secure & Verified</h4>
-                    <p class="text-blue-100 text-lg">All reports are verified through AFIT authentication system</p>
-                </div>
+    <div class="max-w-7xl mx-auto text-center text-white">
+        <!-- AFIT Logo and Title -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white p-4 rounded-2xl shadow-lg">
+                <img src="{% static 'images/logo.jpg' %}" alt="AFIT Logo" 
+                     class="w-24 h-24 object-cover rounded-full"
+                     onerror="this.src='https://via.placeholder.com/96/1a4b8c/ffffff?text=AFIT'">
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Stats Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="text-4xl font-bold text-blue-600 mb-2" id="stats-reported">0</div>
-                <div class="text-gray-600 font-medium">Items Reported</div>
-            </div>
-            <div class="text-center bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="text-4xl font-bold text-green-600 mb-2" id="stats-found">0</div>
-                <div class="text-gray-600 font-medium">Items Found</div>
-            </div>
-            <div class="text-center bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="text-4xl font-bold text-purple-600 mb-2" id="stats-returned">0</div>
-                <div class="text-gray-600 font-medium">Items Returned</div>
-            </div>
-            <div class="text-center bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="text-4xl font-bold text-orange-600 mb-2" id="stats-satisfaction">0%</div>
-                <div class="text-gray-600 font-medium">User Satisfaction</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">How It Works</h2>
-        <p class="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            Simple and secure process to report lost items or find belongings on campus
+        
+        <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+            AFIT Lost & Found
+            <span class="text-blue-200 block text-3xl lg:text-5xl mt-4">Official Campus Platform</span>
+        </h1>
+        
+        <p class="text-xl lg:text-2xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">
+            A secure and verified system for recovering lost items within the Air Force Institute of Technology campus
         </p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Feature 1 -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div class="text-blue-600 text-5xl mb-6 flex justify-center">
-                    <i class="fas fa-exclamation-circle"></i>
+        <!-- Quick Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            {% if user.is_authenticated %}
+            <a href="{% url 'std-board' %}" 
+               class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+            </a>
+            {% else %}
+            <a href="{% url 'my_login' %}" 
+               class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-sign-in-alt mr-2"></i>Student Login
+            </a>
+            <a href="{% url 'register' %}" 
+               class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-user-plus mr-2"></i>Create Account
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- AFIT Quick Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-6 rounded-2xl border border-white border-opacity-20 text-center">
+                <div class="text-3xl font-bold text-white mb-2">
+                    {% if total_reports %}{{ total_reports }}{% else %}0{% endif %}
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Report Lost Item</h3>
-                <p class="text-gray-600 text-lg leading-relaxed text-center">
-                    Can't find your item? Report it with details and optional images to help others identify it quickly.
-                </p>
+                <div class="text-blue-200 font-medium">Items Reported</div>
             </div>
-            
-            <!-- Feature 2 -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div class="text-blue-600 text-5xl mb-6 flex justify-center">
-                    <i class="fas fa-search"></i>
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-6 rounded-2xl border border-white border-opacity-20 text-center">
+                <div class="text-3xl font-bold text-white mb-2">
+                    {% if found_items_count %}{{ found_items_count }}{% else %}0{% endif %}
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Search Found Items</h3>
-                <p class="text-gray-600 text-lg leading-relaxed text-center">
-                    Browse through items found on campus or use our smart search to find your lost belongings.
-                </p>
+                <div class="text-blue-200 font-medium">Items Found</div>
             </div>
-            
-            <!-- Feature 3 -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div class="text-blue-600 text-5xl mb-6 flex justify-center">
-                    <i class="fas fa-handshake"></i>
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-6 rounded-2xl border border-white border-opacity-20 text-center">
+                <div class="text-3xl font-bold text-white mb-2">
+                    {% if returned_items_count %}{{ returned_items_count }}{% else %}0{% endif %}
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Claim & Verify</h3>
-                <p class="text-gray-600 text-lg leading-relaxed text-center">
-                    Securely claim your item with verification to ensure it's returned to the rightful owner.
-                </p>
+                <div class="text-blue-200 font-medium">Items Returned</div>
+            </div>
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-6 rounded-2xl border border-white border-opacity-20 text-center">
+                <div class="text-3xl font-bold text-white mb-2">94%</div>
+                <div class="text-blue-200 font-medium">Success Rate</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Recent Reports Section -->
+<!-- AFIT Campus Guide -->
 <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to AFIT Lost & Found</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Your official campus platform for reporting and recovering lost items. Designed specifically for AFIT students and staff.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- For AFIT Students -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 shadow-lg border border-blue-100">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-user-graduate text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">For AFIT Students</h3>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">
+                                1
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">AFIT Authentication</h4>
+                            <p class="text-gray-600">Login using your official AFIT credentials (matric number or registered email).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">
+                                2
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Report Campus Items</h4>
+                            <p class="text-gray-600">Report items lost or found within AFIT campus premises (library, labs, hostels, etc.).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">
+                                3
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">AFIT Verification</h4>
+                            <p class="text-gray-600">All claims are verified through AFIT's secure authentication system.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">
+                                4
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Campus Pickup</h4>
+                            <p class="text-gray-600">Arrange safe pickup at designated campus locations after verification.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <a href="{% url 'lost-item' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center">
+                        <i class="fas fa-search mr-2"></i>Browse Campus Items
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Start Guide -->
+            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 shadow-lg border border-gray-200">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-rocket text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800">Quick Start Guide</h3>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-exclamation-circle text-red-600"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Lost Something?</h4>
+                            <p class="text-gray-600">Report immediately with details and location within AFIT campus.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-hand-holding text-green-600"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Found Something?</h4>
+                            <p class="text-gray-600">Help a fellow AFIT member by reporting found items on campus.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-shield-alt text-yellow-600"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Secure Process</h4>
+                            <p class="text-gray-600">All transactions are verified through AFIT's secure system.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-users text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Community Support</h4>
+                            <p class="text-gray-600">Join the AFIT community in helping each other recover lost items.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <a href="{% url 'register' %}" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors inline-flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i>Join AFIT Community
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Campus Reports -->
+<section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex flex-col lg:flex-row justify-between items-center mb-12">
             <div>
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Recent Reports</h2>
-                <p class="text-xl text-gray-600">Latest lost and found items reported on campus</p>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Latest Campus Reports</h2>
+                <p class="text-xl text-gray-600">Recently reported items within AFIT campus</p>
             </div>
-            <div class="relative mt-6 lg:mt-0 w-full lg:w-64">
-                <input type="text" placeholder="Search items..." 
-                       class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i>
+            {% if user.is_authenticated %}
+            <div class="mt-6 lg:mt-0 flex space-x-4">
+                <a href="{% url 'report-item' %}" 
+                   class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors inline-flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>Report Lost
+                </a>
+                <a href="{% url 'report-item' %}?type=found" 
+                   class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors inline-flex items-center">
+                    <i class="fas fa-hand-holding mr-2"></i>Report Found
+                </a>
             </div>
+            {% endif %}
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="reports-container">
-            <!-- Reports will be loaded here by JavaScript -->
+        {% if latest_items %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for item in latest_items %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <!-- AFIT Campus Badge -->
+                <div class="px-4 pt-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
+                        AFIT Campus
+                    </span>
+                </div>
+                
+                <!-- Item Status -->
+                <div class="px-4 pb-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold
+                        {% if item.status == 'lost' %}bg-red-100 text-red-800
+                        {% elif item.status == 'found' %}bg-green-100 text-green-800
+                        {% else %}bg-blue-100 text-blue-800{% endif %}">
+                        {{ item.get_status_display|upper }}
+                    </span>
+                </div>
+                
+                <!-- Item Image/Icon -->
+                <div class="h-48 overflow-hidden">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" 
+                             alt="{{ item.title }}" 
+                             class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                            <div class="text-center">
+                                {% if item.category == 'electronics' %}
+                                <i class="fas fa-laptop text-5xl text-blue-400 mb-2"></i>
+                                {% elif item.category == 'documents' %}
+                                <i class="fas fa-file-alt text-5xl text-gray-400 mb-2"></i>
+                                {% elif item.category == 'clothing' %}
+                                <i class="fas fa-tshirt text-5xl text-pink-400 mb-2"></i>
+                                {% elif item.category == 'accessories' %}
+                                <i class="fas fa-key text-5xl text-yellow-400 mb-2"></i>
+                                {% elif item.category == 'books' %}
+                                <i class="fas fa-book text-5xl text-purple-400 mb-2"></i>
+                                {% else %}
+                                <i class="fas fa-box text-5xl text-gray-400 mb-2"></i>
+                                {% endif %}
+                                <p class="text-gray-500 text-sm">No Image</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Item Details -->
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2 truncate">{{ item.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ item.description|truncatechars:80 }}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                            <span class="truncate">
+                                {% if item.status == 'lost' and item.location_lost %}
+                                {{ item.location_lost|truncatechars:20 }}
+                                {% elif item.status == 'found' and item.location_found %}
+                                {{ item.location_found|truncatechars:20 }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="far fa-calendar-alt mr-2 text-gray-400"></i>
+                            <span>{{ item.date_reported|timesince }} ago</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Category and Actions -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                            {{ item.get_category_display }}
+                        </span>
+                        
+                        {% if user.is_authenticated %}
+                        {% if item.status == 'lost' %}
+                        <a href="{% url 'lost-item' %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View Details
+                        </a>
+                        {% else %}
+                        <a href="{% url 'found-item' %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View Details
+                        </a>
+                        {% endif %}
+                        {% else %}
+                        <span class="text-gray-400 text-sm">Login to view</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <!-- Empty State with AFIT Theme -->
+        <div class="bg-white rounded-2xl shadow-sm p-12 text-center border border-blue-100">
+            <div class="max-w-md mx-auto">
+                <div class="text-gray-400 mb-4">
+                    <i class="fas fa-inbox text-5xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">No Recent Campus Reports</h3>
+                <p class="text-gray-500 mb-6">
+                    {% if user.is_authenticated %}
+                    Be the first to report a lost or found item on AFIT campus!
+                    {% else %}
+                    Login with your AFIT credentials to report or view items
+                    {% endif %}
+                </p>
+                {% if user.is_authenticated %}
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="{% url 'report-item' %}" 
+                       class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center justify-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>Report Lost Item
+                    </a>
+                    <a href="{% url 'report-item' %}?type=found" 
+                       class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-flex items-center justify-center">
+                        <i class="fas fa-hand-holding mr-2"></i>Report Found Item
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
         
+        {% if user.is_authenticated %}
         <div class="text-center mt-12">
-            <a href="#" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl">
-                View All Reports
-                <i class="fas fa-arrow-right ml-2"></i>
+            <a href="{% url 'std-board' %}" 
+               class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl">
+                <i class="fas fa-tachometer-alt mr-2"></i>Go to Your Dashboard
             </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- AFIT Campus Safety -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-4">AFIT Campus Safety</h2>
+        <p class="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+            Important guidelines for keeping your belongings safe within AFIT premises
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-id-card text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">AFIT ID Required</h3>
+                <p class="text-gray-600">Always carry your AFIT ID card for identification during item claims.</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-green-200">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-university text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Campus Locations</h3>
+                <p class="text-gray-600">Specify exact campus locations (building, room, lab) when reporting items.</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-6 border border-red-200">
+                <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-shield-alt text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Secure Verification</h3>
+                <p class="text-gray-600">All claims are verified through AFIT's official authentication system.</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200">
+                <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-clock text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">Timely Reporting</h3>
+                <p class="text-gray-600">Report lost items immediately to increase chances of recovery on campus.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Security Section -->
-<section class="py-20 bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-6">Secure & Trusted Platform</h2>
-        <p class="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-            Built with security in mind to protect your personal information and ensure authentic item claims
+<!-- AFIT Call to Action -->
+<section class="py-20 bg-cover bg-center" 
+         style="background-image: linear-gradient(rgba(26, 75, 140, 0.9), rgba(26, 75, 140, 0.95)), url('{% static 'images/afit2.jpg' %}')">
+    <div class="max-w-4xl mx-auto px-4 text-center text-white">
+        <!-- AFIT Logo -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-white p-3 rounded-full">
+                <img src="{% static 'images/logo.jpg' %}" alt="AFIT Logo" 
+                     class="w-16 h-16 object-cover rounded-full"
+                     onerror="this.src='https://via.placeholder.com/64/1a4b8c/ffffff?text=AFIT'">
+            </div>
+        </div>
+        
+        <h2 class="text-4xl font-bold mb-6">Join the AFIT Community</h2>
+        <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+            Help fellow AFIT students and staff recover their lost belongings on campus
         </p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-gray-800 p-8 rounded-2xl">
-                <i class="fas fa-shield-alt text-4xl text-blue-400 mb-4"></i>
-                <h3 class="text-xl font-bold mb-3">AFIT Authentication</h3>
-                <p class="text-gray-300">Verified through official AFIT credentials for secure access</p>
-            </div>
-            <div class="bg-gray-800 p-8 rounded-2xl">
-                <i class="fas fa-user-check text-4xl text-green-400 mb-4"></i>
-                <h3 class="text-xl font-bold mb-3">Identity Verification</h3>
-                <p class="text-gray-300">Secure verification process for item claims and returns</p>
-            </div>
-            <div class="bg-gray-800 p-8 rounded-2xl">
-                <i class="fas fa-lock text-4xl text-purple-400 mb-4"></i>
-                <h3 class="text-xl font-bold mb-3">Data Protection</h3>
-                <p class="text-gray-300">Your personal information is encrypted and protected</p>
-            </div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            {% if user.is_authenticated %}
+            <a href="{% url 'std-board' %}" 
+               class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-tachometer-alt mr-2"></i>Go to Dashboard
+            </a>
+            <a href="{% url 'report-item' %}" 
+               class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-plus-circle mr-2"></i>Report an Item
+            </a>
+            {% else %}
+            <a href="{% url 'register' %}" 
+               class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-user-plus mr-2"></i>Create AFIT Account
+            </a>
+            <a href="{% url 'my_login' %}" 
+               class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-flex items-center justify-center">
+                <i class="fas fa-sign-in-alt mr-2"></i>AFIT Student Login
+            </a>
+            {% endif %}
+        </div>
+        
+        <!-- AFIT Contact Info -->
+        <div class="mt-8 pt-6 border-t border-blue-300">
+            <p class="text-blue-200">
+                <i class="fas fa-envelope mr-2"></i>Official Contact: 
+                <a href="mailto:lostfound@afit.edu.ng" class="underline hover:text-white">lostfound@afit.edu.ng</a>
+            </p>
+            <p class="text-blue-200 text-sm mt-2">
+                For AFIT students and staff only. Verification required for all claims.
+            </p>
         </div>
     </div>
 </section>
 
 <script>
-// Counter Animation for Stats
-function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(start);
-        }
-    }, 16);
-}
-
-// Initialize counters when page loads
+// AFIT-themed animations
 document.addEventListener('DOMContentLoaded', function() {
-    // Animate statistics counters
-    setTimeout(() => {
-        animateCounter(document.getElementById('stats-reported'), 247);
-        animateCounter(document.getElementById('stats-found'), 189);
-        animateCounter(document.getElementById('stats-returned'), 58);
-        
-        // Animate percentage separately
-        const satisfactionElement = document.getElementById('stats-satisfaction');
-        let satisfaction = 0;
-        const satisfactionTimer = setInterval(() => {
-            satisfaction += 1;
-            if (satisfaction >= 94) {
-                satisfactionElement.textContent = '94%';
-                clearInterval(satisfactionTimer);
-            } else {
-                satisfactionElement.textContent = satisfaction + '%';
-            }
-        }, 20);
-    }, 500);
-
-    // Sample reports data
-    const reports = [
-        {
-            status: 'lost',
-            statusText: 'Lost',
-            statusColor: 'red',
-            icon: 'mobile-alt',
-            title: 'Black Samsung Galaxy S21',
-            description: 'Lost near the library building. Has a blue transparent case with a small crack on the back.',
-            user: 'JD',
-            userName: 'John Doe',
-            time: '2 hours ago'
-        },
-        {
-            status: 'found',
-            statusText: 'Found',
-            statusColor: 'green',
-            icon: 'wine-bottle',
-            title: 'Blue Water Bottle',
-            description: 'Found in the cafeteria. It\'s a stainless steel bottle with AFIT logo sticker on it.',
-            user: 'SJ',
-            userName: 'Sarah Johnson',
-            time: '5 hours ago'
-        },
-        {
-            status: 'resolved',
-            statusText: 'Resolved',
-            statusColor: 'blue',
-            icon: 'id-card',
-            title: 'Student ID Card',
-            description: 'Found near the admin building. Returned to the owner after verification process.',
-            user: 'AS',
-            userName: 'Admin Staff',
-            time: '1 day ago'
-        }
+    // Animate AFIT stats counters
+    const stats = [
+        { id: 'stats-reported', value: parseInt('{{ total_reports|default:0 }}') },
+        { id: 'stats-found', value: parseInt('{{ found_items_count|default:0 }}') },
+        { id: 'stats-returned', value: parseInt('{{ returned_items_count|default:0 }}') }
     ];
-
-    // Load reports into container
-    const reportsContainer = document.getElementById('reports-container');
-    reports.forEach(report => {
-        const reportElement = document.createElement('div');
-        reportElement.className = 'bg-white rounded-2xl shadow-lg border-l-4 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1';
-        reportElement.style.borderLeftColor = `var(--${report.statusColor}-500)`;
-        
-        reportElement.innerHTML = `
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="bg-${report.statusColor}-100 text-${report.statusColor}-800 px-4 py-2 rounded-full text-sm font-semibold">
-                        ${report.statusText}
-                    </span>
-                    <span class="text-gray-500 text-sm">${report.time}</span>
-                </div>
-                <div class="bg-gray-100 h-48 rounded-xl flex items-center justify-center mb-6">
-                    <i class="fas fa-${report.icon} text-5xl text-gray-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-3">${report.title}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">${report.description}</p>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
-                            ${report.user}
-                        </div>
-                        <span class="text-gray-700 font-medium">${report.userName}</span>
-                    </div>
-                    <button class="text-blue-600 hover:text-blue-700 font-semibold text-sm">View Details</button>
-                </div>
-            </div>
-        `;
-        
-        reportsContainer.appendChild(reportElement);
+    
+    stats.forEach(stat => {
+        if (stat.value > 0) {
+            animateCounter(document.getElementById(stat.id), stat.value);
+        }
     });
-
-    // Search functionality
-    const searchInput = document.querySelector('input[type="text"]');
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const reportCards = document.querySelectorAll('#reports-container > div');
+    
+    function animateCounter(element, target, duration = 2000) {
+        if (!element) return;
         
-        reportCards.forEach(card => {
-            const title = card.querySelector('h3').textContent.toLowerCase();
-            const description = card.querySelector('p').textContent.toLowerCase();
-            
-            if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                card.style.display = 'block';
+        let start = 0;
+        const increment = target / (duration / 16);
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+                element.textContent = target;
+                clearInterval(timer);
             } else {
-                card.style.display = 'none';
+                element.textContent = Math.floor(start);
             }
+        }, 16);
+    }
+    
+    // Add AFIT-themed hover effects
+    const campusCards = document.querySelectorAll('.bg-white.rounded-2xl');
+    campusCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 20px 25px -5px rgba(26, 75, 140, 0.1), 0 10px 10px -5px rgba(26, 75, 140, 0.04)';
+            this.style.transform = 'translateY(-8px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.boxShadow = '';
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Add pulse animation to action buttons
+    const actionButtons = document.querySelectorAll('.bg-blue-600, .bg-red-600, .bg-green-600');
+    actionButtons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.animation = 'pulse 1s infinite';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.animation = '';
         });
     });
 });
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+// Add pulse animation to CSS
+const style = document.createElement('style');
+style.textContent = `
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* AFIT Blue Theme */
+.bg-blue-600 {
+    background-color: #1a4b8c;
+}
+
+.hover\\:bg-blue-700:hover {
+    background-color: #153a6e;
+}
+
+.border-blue-600 {
+    border-color: #1a4b8c;
+}
+
+.text-blue-600 {
+    color: #1a4b8c;
+}
+`;
+document.head.appendChild(style);
 </script>
 
 <style>
+/* AFIT Color Theme */
 :root {
-    --primary-color: #1a4b8c;
-    --secondary-color: #f8f9fa;
-    --accent-color: #ffc107;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --red-500: #ef4444;
-    --green-500: #10b981;
-    --blue-500: #3b82f6;
-    --purple-500: #8b5cf6;
-    --orange-500: #f59e0b;
+    --afit-blue: #1a4b8c;
+    --afit-light-blue: #2c6bb8;
+    --afit-dark-blue: #153a6e;
+    --afit-red: #dc3545;
+    --afit-green: #28a745;
+    --afit-gold: #ffc107;
+}
+
+/* Smooth transitions */
+.bg-white.rounded-2xl {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass effect for stats */
+.bg-white.bg-opacity-10 {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .text-6xl {
+        font-size: 2.5rem;
+    }
+    
+    .text-4xl {
+        font-size: 2rem;
+    }
+    
+    .text-2xl {
+        font-size: 1.5rem;
+    }
+    
+    .px-8 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    
+    .py-4 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
 }
 </style>
 
