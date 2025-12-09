@@ -105,7 +105,7 @@ def my_login(request):
             
             # Redirect based on user type
             if user.user_type == 'admin':
-                return redirect('admin_dashboard')
+                return redirect('/admin/')
             else:  
                 return redirect('std-board')
         else:
@@ -119,32 +119,42 @@ def my_login(request):
 
 
  # ================= STUDENT DASHBOARD ==================
+
+
 def student_dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('my_login')
-
-    user = request.user
+    user_items = Item.objects.filter(reported_by=request.user)
+    myReports = user_items.count()
+    lost_count = user_items.filter(status='lost').count()
+    found_count = user_items.filter(status='found').count()
+    claimed_count = user_items.filter(status='claimed').count()
+    items = user_items.order_by('-date_reported')
+    category_choices = []
+    try:
+        if hasattr(Item, 'CATEGORY_CHOICES'):
+            category_choices = Item.CATEGORY_CHOICES
+        elif hasattr(Item, 'CATEGORIES'):
+            category_choices = Item.CATEGORIES
+        elif hasattr(Item, 'category'):  
+            category_field = Item._meta.get_field('category')
+            if hasattr(category_field, 'choices') and category_field.choices:
+                category_choices = category_field.choices
+    except:
+        category_choices = [
+            ('electronics', 'Electronics'),
+            ('documents', 'Documents'),
+            ('clothing', 'Clothing'),
+            ('accessories', 'Accessories'),
+            ('books', 'Books'),
+            ('other', 'Other'),
+        ]
     
-    active_reports = Item.objects.filter(reported_by=user, status__in=['lost', 'found']).count()
-    items_found = Item.objects.filter(reported_by=user, status='found').count()
-    pending_claims = Item.objects.filter(reported_by=user, status='found', claimed_by__isnull=True).count()
-    resolved_cases = Item.objects.filter(reported_by=user, status='returned').count()
-    
-    recently_found = Item.objects.filter(
-        status='found',
-        reported_by__student__isnull=False
-    ).exclude(reported_by=user).order_by('-date_reported')[:4]
-    
-    user_recent_items = Item.objects.filter(reported_by=user).order_by('-date_reported')[:5]
-
     context = {
-        'user': user,
-        'active_reports': active_reports,
-        'items_found': items_found,
-        'pending_claims': pending_claims,
-        'resolved_cases': resolved_cases,
-        'recently_found_items': recently_found,
-        'user_recent_items': user_recent_items,
+        'myReports': myReports,
+        'lost_count': lost_count,
+        'found_count': found_count,
+        'claimed_count': claimed_count,
+        'items': items,
+        'categories': category_choices,
     }
     
     return render(request, "Lost_Found/studentPage/std-board.html", context)
@@ -323,62 +333,7 @@ def claim_confirmation(request, item_id):
         messages.error(request, 'Item not found.')
         return redirect('found-item')
 
-@login_required
-def my_report(request):
-    # Get all items reported by the current user
-    user_items = Item.objects.filter(reported_by=request.user)
-    
-    # Get counts for stats
-    myReports = user_items.count()
-    
-    # Get counts by status (adjust field names based on your model)
-    # Assuming you have a 'status' field with choices 'lost', 'found', 'claimed'
-    lost_count = user_items.filter(status='lost').count()
-    found_count = user_items.filter(status='found').count()
-    claimed_count = user_items.filter(status='claimed').count()
-    
-    # If your model doesn't have status, but has item_type instead:
-    # lost_count = user_items.filter(item_type='lost').count()
-    # found_count = user_items.filter(item_type='found').count()
-    # claimed_count = user_items.filter(claimed_by__isnull=False).count()
-    
-    # Get all items for display, ordered by most recent
-    items = user_items.order_by('-date_reported')
-    
-    # Get category choices from Item model
-    # First, check what your category field is called
-    category_choices = []
-    
-    try:
-        # Try to get CATEGORY_CHOICES from the Item model
-        if hasattr(Item, 'CATEGORY_CHOICES'):
-            category_choices = Item.CATEGORY_CHOICES
-        elif hasattr(Item, 'CATEGORIES'):
-            category_choices = Item.CATEGORIES
-        elif hasattr(Item, 'category'):  # Get choices from field
-            category_field = Item._meta.get_field('category')
-            if hasattr(category_field, 'choices') and category_field.choices:
-                category_choices = category_field.choices
-    except:
-        # Fallback categories if not defined
-        category_choices = [
-            ('electronics', 'Electronics'),
-            ('documents', 'Documents'),
-            ('clothing', 'Clothing'),
-            ('accessories', 'Accessories'),
-            ('books', 'Books'),
-            ('other', 'Other'),
-        ]
-    
-    context = {
-        'myReports': myReports,
-        'lost_count': lost_count,
-        'found_count': found_count,
-        'claimed_count': claimed_count,
-        'items': items,
-        'categories': category_choices,
-    }
-    return render(request, 'Lost_Found/studentPage/my-report.html', context)
+
 
 # ================= MARK ITEM AS FOUND ==================
 @login_required

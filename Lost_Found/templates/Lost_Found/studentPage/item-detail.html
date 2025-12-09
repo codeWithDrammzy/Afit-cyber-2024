@@ -321,23 +321,7 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Form validation
-    const claimForm = document.getElementById('claim-form');
-    if (claimForm) {
-        claimForm.addEventListener('submit', function(e) {
-            const description = document.getElementById('id_description').value.trim();
-            const proof = document.getElementById('id_proof').value.trim();
-            
-            if (!description || !proof) {
-                e.preventDefault();
-                alert('Please fill in all required fields.');
-            }
-        });
-    }
-});
-</script>
+
 
 <style>
 /* Custom styles for radio buttons */

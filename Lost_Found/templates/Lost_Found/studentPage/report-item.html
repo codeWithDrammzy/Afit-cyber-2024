@@ -4,18 +4,7 @@
 {% block content %}
 <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
-        <!-- Page Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Report an Item</h1>
-                    <p class="text-gray-600 mt-2">Help reunite lost items with their owners</p>
-                </div>
-                <a href="{% url 'std-board' %}" class="flex items-center text-blue-600 hover:text-blue-800">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
-                </a>
-            </div>
-        </div>
+      
 
         <!-- Status Selection (Only One Section) -->
         <div class="mb-8">
@@ -24,31 +13,35 @@
                 <p class="text-gray-600">Choose one option below to get started</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-2 gap-2 md:gap-6">
                 <!-- Lost Item Card -->
-                <div id="lost-card" class="cursor-pointer bg-white rounded-2xl border-2 border-gray-200 p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div id="lost-card" class="cursor-pointer bg-white rounded-lg md:rounded-2xl border border-gray-200 md:border-2 p-2 md:p-6 transition-all duration-300 hover:shadow-md md:hover:shadow-xl hover:-translate-y-1">
                     <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-red-100 to-red-50 rounded-full flex items-center justify-center mb-4">
-                            <i class="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+                        <div class="w-10 h-10 md:w-20 md:h-20 bg-gradient-to-br from-red-100 to-red-50 rounded-full flex items-center justify-center mb-1 md:mb-4">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-base md:text-3xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Report Lost Item</h3>
-                        <p class="text-gray-600 mb-4">Something of yours is missing? Report it here so others can help find it.</p>
-                        <div class="bg-red-50 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
-                            <i class="fas fa-search mr-1"></i> Looking for your item
+                        <h3 class="text-xs md:text-xl font-bold text-gray-800 mb-0.5 md:mb-2">Lost Item</h3>
+                        <p class="text-[10px] md:text-base text-gray-600 mb-1 md:mb-4 hidden md:block">
+                            Something missing? Report it.
+                        </p>
+                        <div class="bg-red-50 text-red-700 px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-sm font-medium">
+                            <i class="fas fa-search text-[8px] md:text-sm mr-0.5 md:mr-1"></i> Report
                         </div>
                     </div>
                 </div>
                 
                 <!-- Found Item Card -->
-                <div id="found-card" class="cursor-pointer bg-white rounded-2xl border-2 border-gray-200 p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div id="found-card" class="cursor-pointer bg-white rounded-lg md:rounded-2xl border border-gray-200 md:border-2 p-2 md:p-6 transition-all duration-300 hover:shadow-md md:hover:shadow-xl hover:-translate-y-1">
                     <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mb-4">
-                            <i class="fas fa-hand-holding-heart text-green-600 text-3xl"></i>
+                        <div class="w-10 h-10 md:w-20 md:h-20 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mb-1 md:mb-4">
+                            <i class="fas fa-hand-holding-heart text-green-600 text-base md:text-3xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Report Found Item</h3>
-                        <p class="text-gray-600 mb-4">Found someone's belongings? Help return them to their owner.</p>
-                        <div class="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                            <i class="fas fa-heart mr-1"></i> Helping others
+                        <h3 class="text-xs md:text-xl font-bold text-gray-800 mb-0.5 md:mb-2">Found Item</h3>
+                        <p class="text-[10px] md:text-base text-gray-600 mb-1 md:mb-4 hidden md:block">
+                            Found something? Return it.
+                        </p>
+                        <div class="bg-green-50 text-green-700 px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-sm font-medium">
+                            <i class="fas fa-heart text-[8px] md:text-sm mr-0.5 md:mr-1"></i> Report
                         </div>
                     </div>
                 </div>
@@ -334,192 +327,6 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Elements
-        const lostCard = document.getElementById('lost-card');
-        const foundCard = document.getElementById('found-card');
-        const formContainer = document.getElementById('report-form-container');
-        const statusField = document.getElementById('status-field');
-        const formTitle = document.getElementById('form-title');
-        const formSubtitle = document.getElementById('form-subtitle');
-        const selectedStatusSpan = document.getElementById('selected-status');
-        const statusIndicator = document.getElementById('status-indicator');
-        const changeStatusBtn = document.getElementById('change-status-btn');
-        const cancelFormBtn = document.getElementById('cancel-form-btn');
-        const locationFoundSection = document.getElementById('location-found-section');
-        const locationLostSection = document.getElementById('location-lost-section');
-        const locationFoundInput = document.getElementById('id_location_found');
-        const locationLostInput = document.getElementById('id_location_lost');
-        
-        // Check if form has errors (form is already visible)
-        const hasFormErrors = document.querySelector('.bg-red-50') !== null;
-        
-        if (hasFormErrors) {
-            // If form has errors, show the form immediately
-            formContainer.classList.remove('hidden');
-            
-            // Set initial state based on form value
-            const initialStatus = document.querySelector('input[name="status"]');
-            if (initialStatus && initialStatus.value === 'found') {
-                setStatus('found');
-            } else {
-                setStatus('lost');
-            }
-        } else {
-            // Default to showing selection cards
-            formContainer.classList.add('hidden');
-        }
-        
-        // Set status function
-        function setStatus(status) {
-            // Update hidden field
-            statusField.value = status;
-            
-            // Update UI based on status
-            if (status === 'lost') {
-                // Update cards
-                lostCard.classList.add('border-red-500', 'bg-red-50');
-                foundCard.classList.remove('border-green-500', 'bg-green-50');
-                
-                // Update form title
-                formTitle.innerHTML = 'Report <span id="selected-status">Lost</span> Item';
-                formSubtitle.textContent = 'Please provide details about your missing item';
-                
-                // Update status indicator
-                statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i><span class="font-medium">Reporting a Lost Item</span>';
-                statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-red-100 text-red-700';
-                
-                // Update location fields
-                locationFoundSection.style.display = 'none';
-                locationLostSection.style.display = 'block';
-                locationFoundInput.required = false;
-                locationLostInput.required = true;
-                
-            } else if (status === 'found') {
-                // Update cards
-                lostCard.classList.remove('border-red-500', 'bg-red-50');
-                foundCard.classList.add('border-green-500', 'bg-green-50');
-                
-                // Update form title
-                formTitle.innerHTML = 'Report <span id="selected-status">Found</span> Item';
-                formSubtitle.textContent = 'Please provide details about the found item';
-                
-                // Update status indicator
-                statusIndicator.innerHTML = '<i class="fas fa-hand-holding-heart mr-2"></i><span class="font-medium">Reporting a Found Item</span>';
-                statusIndicator.className = 'inline-flex items-center px-4 py-2 rounded-full mb-6 bg-green-100 text-green-700';
-                
-                // Update location fields
-                locationFoundSection.style.display = 'block';
-                locationLostSection.style.display = 'none';
-                locationFoundInput.required = true;
-                locationLostInput.required = false;
-            }
-        }
-        
-        // Event Listeners
-        lostCard.addEventListener('click', function() {
-            setStatus('lost');
-            formContainer.classList.remove('hidden');
-            // Scroll to form
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        
-        foundCard.addEventListener('click', function() {
-            setStatus('found');
-            formContainer.classList.remove('hidden');
-            // Scroll to form
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        
-        changeStatusBtn.addEventListener('click', function() {
-            // Hide form and show selection cards
-            formContainer.classList.add('hidden');
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        
-        cancelFormBtn.addEventListener('click', function() {
-            // Hide form and show selection cards
-            formContainer.classList.add('hidden');
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        
-        // Initialize category selection
-        const categoryRadios = document.querySelectorAll('input[name="category"]');
-        categoryRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                // Remove all checked styles first
-                document.querySelectorAll('label[for^="id_category_"]').forEach(label => {
-                    label.classList.remove('border-blue-500', 'bg-blue-50');
-                });
-                
-                // Add style to selected
-                if (this.checked) {
-                    const label = document.querySelector(`label[for="${this.id}"]`);
-                    label.classList.add('border-blue-500', 'bg-blue-50');
-                }
-            });
-            
-            // Set initial state for categories
-            if (radio.checked) {
-                const label = document.querySelector(`label[for="${radio.id}"]`);
-                label.classList.add('border-blue-500', 'bg-blue-50');
-            }
-        });
-        
-        // Set default date to now if empty
-        const dateInput = document.getElementById('id_date_occurred');
-        if (!dateInput.value) {
-            const now = new Date();
-            // Format for datetime-local input
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            
-            dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
-    });
-
-    // Image preview functionality
-    function previewImage(event) {
-        const input = event.target;
-        const fileName = input.files[0] ? input.files[0].name : 'No file chosen';
-        document.getElementById('file-name').textContent = fileName;
-        
-        const preview = document.getElementById('preview');
-        const previewContainer = document.getElementById('image-preview');
-        
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-            }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removeImage() {
-        const input = document.getElementById('id_image');
-        const previewContainer = document.getElementById('image-preview');
-        const fileName = document.getElementById('file-name');
-        
-        input.value = '';
-        previewContainer.classList.add('hidden');
-        fileName.textContent = 'No file chosen';
-    }
-
-    // Form validation before submit
-    document.getElementById('report-form').addEventListener('submit', function(e) {
-        console.log('Form submitted - Status:', document.getElementById('status-field').value);
-    });
-</script>
 
 <style>
     /* Selection Cards */

@@ -1,314 +1,395 @@
 {% extends 'Lost_Found/main.html' %}
+{% load static %}
+
 {% block content %}
 
 <div class="p-4 md:p-6">
-    <!-- Welcome Card -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-5 mb-6 border border-blue-100">
+    <!-- Page Header with User Info - Mobile Optimized -->
+    <div class="mb-6 md:mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl md:rounded-2xl p-4 md:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 mb-1">Hello, {{ user.first_name|default:"Student" }}! 👋</h1>
-                <p class="text-gray-600">Welcome to Campus Lost & Found System</p>
-            </div>
-            
-            <!-- Student Badge -->
-            <div class="mt-4 md:mt-0 bg-white rounded-xl px-4 py-2 border border-blue-200">
-                <p class="text-xs text-gray-500">Student ID</p>
-                <p class="font-mono font-semibold text-gray-800">
-                    {% if user.student.matric_no %}
-                        {{ user.student.matric_no }}
-                    {% else %}
-                        {{ user.username }}
-                    {% endif %}
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-gray-500">Active Reports</p>
-                    <p class="text-2xl font-bold text-blue-600 mt-1">{{ active_reports }}</p>
-                </div>
-                <div class="text-blue-500">
-                    <i class="fas fa-bullhorn text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Your ongoing reports</p>
-        </div>
-        
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-gray-500">Items Found</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1">{{ items_found }}</p>
-                </div>
-                <div class="text-green-500">
-                    <i class="fas fa-check-circle text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Items you've reported found</p>
-        </div>
-        
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-gray-500">Pending Claims</p>
-                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ pending_claims }}</p>
-                </div>
-                <div class="text-yellow-500">
-                    <i class="fas fa-clock text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Awaiting pickup</p>
-        </div>
-        
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-gray-500">Resolved Cases</p>
-                    <p class="text-2xl font-bold text-purple-600 mt-1">{{ resolved_cases }}</p>
-                </div>
-                <div class="text-purple-500">
-                    <i class="fas fa-trophy text-xl"></i>
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Successfully resolved</p>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="mb-8">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Report Lost Item -->
-            <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100 p-5 hover:shadow-md transition-all">
-                <div class="flex items-start space-x-4">
-                    <div class="bg-red-100 text-red-600 w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-exclamation-triangle text-xl"></i>
+            <div class="mb-4 md:mb-0">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
+                        <i class="fas fa-user text-white text-lg md:text-xl"></i>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-gray-800 text-lg mb-2">Report Lost Item</h3>
-                        <p class="text-gray-600 text-sm mb-4">Missing something? Report it so others can help find it.</p>
-                        <a href="{% url 'report-item' %}" class="block w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors text-center">
-                            <i class="fas fa-plus-circle mr-2"></i>Report Now
-                        </a>
+                    <div class="flex-1 min-w-0">
+                        <h1 class="text-lg md:text-2xl font-bold text-gray-800 truncate">My Reports</h1>
+                        <p class="text-sm md:text-base text-gray-600 truncate">Hi, <span class="font-semibold text-blue-600">{{ request.user.first_name|default:request.user.username }}</span></p>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Report Found Item -->
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100 p-5 hover:shadow-md transition-all">
-                <div class="flex items-start space-x-4">
-                    <div class="bg-green-100 text-green-600 w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-hand-holding-heart text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-gray-800 text-lg mb-2">Report Found Item</h3>
-                        <p class="text-gray-600 text-sm mb-4">Found someone's belongings? Help return them.</p>
-                        <a href="{% url 'report-item' %}" class="block w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center">
-                            <i class="fas fa-plus-circle mr-2"></i>Report Now
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- My Recent Reports -->
-    {% if user_recent_items %}
-    <div class="mb-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800">My Recent Reports</h2>
-            <a href="" class="text-blue-600 text-sm font-medium hover:text-blue-800">View All →</a>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for item in user_recent_items %}
-            <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
-                <div class="flex items-start space-x-3">
-                    <div class="w-16 h-16 {% if item.status == 'found' %}bg-green-100{% elif item.status == 'lost' %}bg-red-100{% else %}bg-blue-100{% endif %} rounded-lg flex items-center justify-center flex-shrink-0">
-                        {% if item.category == 'electronics' %}
-                        <i class="fas fa-laptop {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% elif item.category == 'documents' %}
-                        <i class="fas fa-file-alt {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% elif item.category == 'clothing' %}
-                        <i class="fas fa-tshirt {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% elif item.category == 'accessories' %}
-                        <i class="fas fa-key {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% elif item.category == 'books' %}
-                        <i class="fas fa-book {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% else %}
-                        <i class="fas fa-box {% if item.status == 'found' %}text-green-600{% elif item.status == 'lost' %}text-red-600{% else %}text-blue-600{% endif %} text-xl"></i>
-                        {% endif %}
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-semibold text-gray-800 truncate">{{ item.title }}</h3>
-                            <span class="px-2 py-1 {% if item.status == 'found' %}bg-green-100 text-green-700{% elif item.status == 'lost' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %} rounded text-xs font-medium">
-                                {{ item.get_status_display|upper }}
-                            </span>
+                <!-- User Info - Hidden on mobile, shown on desktop -->
+                <div class="hidden md:flex flex-wrap gap-4 mt-4">
+                    <div class="bg-white rounded-lg p-3 shadow-sm flex items-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-id-card text-blue-600 text-sm"></i>
                         </div>
-                        <p class="text-gray-600 text-sm mb-2">
-                            📍 
-                            {% if item.status == 'found' %}
-                                {{ item.location_found|default:"Location not specified" }}
-                            {% elif item.status == 'lost' %}
-                                {{ item.location_lost|default:"Location not specified" }}
+                        <div>
+                            <p class="text-sm text-gray-500">Matric No.</p>
+                            <p class="font-bold text-gray-800 text-sm">{{ user.student.matric_no|upper|truncatechars:10 }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 shadow-sm flex items-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-envelope text-green-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Email</p>
+                            <p class="font-bold text-gray-800 text-sm truncate">{{ request.user.email|truncatechars:20 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions - Mobile Optimized -->
+            <div class="flex gap-2 md:gap-3">
+                <a href="{% url 'report-item' %}" class="flex-1 md:flex-none px-3 py-2 md:px-5 md:py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 inline-flex items-center justify-center text-sm md:text-base shadow hover:shadow-md md:hover:shadow-xl transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus-circle mr-1 md:mr-2 text-xs md:text-base"></i>
+                    <span class="hidden md:inline">Report Lost</span>
+                    <span class="md:hidden">Lost</span>
+                </a>
+                <a href="{% url 'report-item' %}?type=found" class="flex-1 md:flex-none px-3 py-2 md:px-5 md:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 inline-flex items-center justify-center text-sm md:text-base shadow hover:shadow-md md:hover:shadow-xl transform hover:-translate-y-0.5">
+                    <i class="fas fa-check-circle mr-1 md:mr-2 text-xs md:text-base"></i>
+                    <span class="hidden md:inline">Report Found</span>
+                    <span class="md:hidden">Found</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Overview - Mobile: Show only numbers, Desktop: Full cards -->
+    <div class="mb-6 md:mb-8">
+        <!-- Mobile Stats (Compact) -->
+        <div class="md:hidden grid grid-cols-4 gap-2 mb-4">
+            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg p-3 text-white text-center">
+                <p class="text-xs opacity-90 mb-1">Total</p>
+                <p class="text-xl font-bold">{{ myReports }}</p>
+            </div>
+            <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-lg p-3 text-white text-center">
+                <p class="text-xs opacity-90 mb-1">Lost</p>
+                <p class="text-xl font-bold">{{ lost_count }}</p>
+            </div>
+            <div class="bg-gradient-to-br from-green-500 to-teal-600 rounded-lg p-3 text-white text-center">
+                <p class="text-xs opacity-90 mb-1">Found</p>
+                <p class="text-xl font-bold">{{ found_count }}</p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg p-3 text-white text-center">
+                <p class="text-xs opacity-90 mb-1">Claimed</p>
+                <p class="text-xl font-bold">{{ claimed_count }}</p>
+            </div>
+        </div>
+
+        <!-- Desktop Stats (Full Cards) -->
+        <div class="hidden md:grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Total Reports Card -->
+            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-5 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Total Reports</p>
+                        <p class="text-3xl font-bold mt-2">{{ myReports }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-clipboard-list text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                    <p class="text-sm opacity-90">All items you've reported</p>
+                </div>
+            </div>
+
+            <!-- Lost Items Card -->
+            <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-xl p-5 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Lost Items</p>
+                        <p class="text-3xl font-bold mt-2">{{ lost_count }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-search text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                    <p class="text-sm opacity-90">Items you've reported as lost</p>
+                </div>
+            </div>
+
+            <!-- Found Items Card -->
+            <div class="bg-gradient-to-br from-green-500 to-teal-600 rounded-xl p-5 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Found Items</p>
+                        <p class="text-3xl font-bold mt-2">{{ found_count }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                    <p class="text-sm opacity-90">Items you've reported as found</p>
+                </div>
+            </div>
+
+            <!-- Claimed Items Card -->
+            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-5 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm opacity-90">Claimed Items</p>
+                        <p class="text-3xl font-bold mt-2">{{ claimed_count }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-hand-holding text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                    <p class="text-sm opacity-90">Items successfully claimed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="mb-6 md:mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-4">
+            <!-- Search Bar - Mobile optimized -->
+            <div class="mb-4">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Search reports..." 
+                        class="w-full pl-9 md:pl-12 pr-8 md:pr-12 py-2 md:py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-300 text-sm md:text-base"
+                    >
+                    <button id="clearSearch" class="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Buttons - Mobile optimized -->
+            <div class="mb-3 md:mb-0">
+                <div class="flex flex-wrap gap-1 md:gap-2">
+                    <button class="filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors text-xs md:text-sm" data-filter="all">
+                        <i class="fas fa-layer-group mr-1 md:mr-2"></i>All
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-xs md:text-sm" data-filter="lost">
+                        <i class="fas fa-search mr-1 md:mr-2"></i>Lost
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-xs md:text-sm" data-filter="found">
+                        <i class="fas fa-check-circle mr-1 md:mr-2"></i>Found
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-xs md:text-sm" data-filter="claimed">
+                        <i class="fas fa-hand-holding mr-1 md:mr-2"></i>Claimed
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Chips - Hidden on mobile, show on desktop -->
+            <div class="hidden md:block mt-4">
+                <div class="flex flex-wrap gap-2">
+                    {% for category_value, category_name in categories %}
+                        <button class="category-chip px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm" data-category="{{ category_value }}">
+                            {% if category_value == 'electronics' %}<i class="fas fa-laptop mr-1"></i>
+                            {% elif category_value == 'documents' %}<i class="fas fa-file-alt mr-1"></i>
+                            {% elif category_value == 'clothing' %}<i class="fas fa-tshirt mr-1"></i>
+                            {% elif category_value == 'accessories' %}<i class="fas fa-key mr-1"></i>
+                            {% elif category_value == 'books' %}<i class="fas fa-book mr-1"></i>
+                            {% else %}<i class="fas fa-box mr-1"></i>{% endif %}
+                            {{ category_name }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports List -->
+    <div class="mb-8">
+        <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-list mr-2 text-blue-600"></i>My Reports
+            <span class="ml-2 text-xs md:text-sm font-normal text-gray-500">({{ myReports }} items)</span>
+        </h2>
+
+        {% if items %}
+            <div id="reportsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {% for item in items %}
+                <div class="report-card bg-white rounded-xl md:rounded-2xl shadow-md md:shadow-lg overflow-hidden border border-gray-100 hover:shadow-lg md:hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" 
+                     data-type="{{ item.status }}" 
+                     data-category="{{ item.category }}"
+                     data-search="{{ item.title|lower }} {{ item.description|lower }} {{ item.location_lost|lower }} {{ item.location_found|lower }}">
+                    
+                    <!-- Item Image/Icon -->
+                    <div class="relative h-40 md:h-48 overflow-hidden">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" 
+                                 alt="{{ item.title }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br 
+                                {% if item.category == 'electronics' %}from-blue-50 to-blue-100
+                                {% elif item.category == 'documents' %}from-gray-50 to-gray-100
+                                {% elif item.category == 'clothing' %}from-pink-50 to-pink-100
+                                {% elif item.category == 'accessories' %}from-yellow-50 to-yellow-100
+                                {% elif item.category == 'books' %}from-purple-50 to-purple-100
+                                {% else %}from-gray-50 to-gray-100{% endif %}">
+                                {% if item.category == 'electronics' %}
+                                <i class="fas fa-laptop text-2xl md:text-4xl text-blue-400"></i>
+                                {% elif item.category == 'documents' %}
+                                <i class="fas fa-file-alt text-2xl md:text-4xl text-gray-400"></i>
+                                {% elif item.category == 'clothing' %}
+                                <i class="fas fa-tshirt text-2xl md:text-4xl text-pink-400"></i>
+                                {% elif item.category == 'accessories' %}
+                                <i class="fas fa-key text-2xl md:text-4xl text-yellow-400"></i>
+                                {% elif item.category == 'books' %}
+                                <i class="fas fa-book text-2xl md:text-4xl text-purple-400"></i>
+                                {% else %}
+                                <i class="fas fa-box text-2xl md:text-4xl text-gray-400"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Status Badge -->
+                        <div class="absolute top-2 md:top-4 left-2 md:left-4">
+                            {% if item.status == 'pending' %}
+                            <span class="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold">
+                                <i class="fas fa-clock mr-0.5 md:mr-1 text-xs"></i>PENDING
+                            </span>
+                            {% elif item.status == 'verified' %}
+                            <span class="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-green-100 text-green-800 text-xs font-semibold">
+                                <i class="fas fa-check-circle mr-0.5 md:mr-1 text-xs"></i>VERIFIED
+                            </span>
+                            {% elif item.status == 'claimed' %}
+                            <span class="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold">
+                                <i class="fas fa-hand-holding mr-0.5 md:mr-1 text-xs"></i>CLAIMED
+                            </span>
                             {% endif %}
-                        </p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">
-                                {% if item.status == 'found' %}
-                                    Found: {{ item.date_occurred|date:"M d, Y" }}
-                                {% elif item.status == 'lost' %}
-                                    Lost: {{ item.date_occurred|date:"M d, Y" }}
-                                {% endif %}
+                        </div>
+                        
+                        <!-- Category Badge -->
+                        <div class="absolute top-2 md:top-4 right-2 md:right-4">
+                            <span class="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-white bg-opacity-90 text-gray-700 text-xs font-semibold shadow-sm">
+                                {% if item.category == 'electronics' %}ELEC
+                                {% elif item.category == 'documents' %}DOC
+                                {% elif item.category == 'clothing' %}CLOTH
+                                {% elif item.category == 'accessories' %}ACC
+                                {% elif item.category == 'books' %}BOOK
+                                {% else %}OTHER{% endif %}
                             </span>
-                            <a href="" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Details →</a>
                         </div>
                     </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 
-    <!-- Recently Found Items (From Others) -->
-    {% if recently_found_items %}
-    <div class="mb-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800">Recently Found Items</h2>
-            <a href="{% url 'found-item' %}" class="text-blue-600 text-sm font-medium hover:text-blue-800">Browse All →</a>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for item in recently_found_items %}
-            <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
-                <div class="flex items-start space-x-3">
-                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        {% if item.category == 'electronics' %}
-                        <i class="fas fa-laptop text-green-600 text-xl"></i>
-                        {% elif item.category == 'documents' %}
-                        <i class="fas fa-file-alt text-green-600 text-xl"></i>
-                        {% elif item.category == 'clothing' %}
-                        <i class="fas fa-tshirt text-green-600 text-xl"></i>
-                        {% elif item.category == 'accessories' %}
-                        <i class="fas fa-key text-green-600 text-xl"></i>
-                        {% elif item.category == 'books' %}
-                        <i class="fas fa-book text-green-600 text-xl"></i>
-                        {% else %}
-                        <i class="fas fa-box text-green-600 text-xl"></i>
-                        {% endif %}
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-semibold text-gray-800 truncate">{{ item.title }}</h3>
-                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">FOUND</span>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-2">
-                            📍 {{ item.location_found|default:"Location not specified" }}
-                        </p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">
-                                Found: {{ item.date_occurred|date:"M d, Y" }}
-                                {% if item.reported_by != user %}
-                                    by {{ item.reported_by.first_name|default:item.reported_by.username }}
-                                {% endif %}
+                    <!-- Item Details -->
+                    <div class="p-3 md:p-5">
+                        <div class="flex items-start justify-between mb-2 md:mb-3">
+                            <h3 class="font-bold text-base md:text-lg text-gray-800 truncate">{{ item.title|truncatechars:30 }}</h3>
+                            <span class="ml-1 md:ml-2 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-xs font-semibold 
+                                {% if item.status == 'lost' %}bg-red-100 text-red-800
+                                {% else %}bg-green-100 text-green-800{% endif %}">
+                                {% if item.status == 'lost' %}<i class="fas fa-search mr-0.5 md:mr-1 text-xs"></i>LOST
+                                {% else %}<i class="fas fa-check-circle mr-0.5 md:mr-1 text-xs"></i>FOUND{% endif %}
                             </span>
-                            <a href="" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Details →</a>
+                        </div>
+
+                        <p class="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">{{ item.description|truncatechars:80 }}</p>
+
+                        <div class="space-y-1 md:space-y-2 mb-3 md:mb-4">
+                            <div class="flex items-center text-xs md:text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt mr-1 md:mr-2 text-gray-400 text-xs"></i>
+                                <span class="truncate">
+                                    {% if item.location_lost %}
+                                    Lost: {{ item.location_lost|truncatechars:20 }}
+                                    {% elif item.location_found %}
+                                    Found: {{ item.location_found|truncatechars:20 }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="flex items-center text-xs md:text-sm text-gray-500">
+                                <i class="far fa-calendar-alt mr-1 md:mr-2 text-gray-400 text-xs"></i>
+                                <span>{{ item.date_reported|date:"M d" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-1 md:gap-2 pt-3 md:pt-4 border-t border-gray-100">
+                            <a href="" 
+                               class="flex-1 px-2 md:px-4 py-1.5 md:py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors text-center text-xs md:text-sm font-medium">
+                                <i class="fas fa-eye mr-0.5 md:mr-1 text-xs"></i>View
+                            </a>
+                            {% if item.status == 'pending' %}
+                            <a href="" 
+                               class="px-2 md:px-4 py-1.5 md:py-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 rounded-lg transition-colors text-xs md:text-sm font-medium">
+                                <i class="fas fa-edit text-xs md:text-sm"></i>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="col-span-2 text-center py-8">
-                <i class="fas fa-inbox text-gray-300 text-4xl mb-3"></i>
-                <p class="text-gray-500">No recently found items by others</p>
+
+            <!-- No Results Message (Hidden by default) -->
+            <div id="noResults" class="hidden text-center py-12 md:py-16">
+                <div class="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                    <i class="fas fa-search text-xl md:text-3xl text-gray-400"></i>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-700 mb-2">No matching reports</h3>
+                <p class="text-gray-500 text-sm md:text-base mb-4 md:mb-6">Try adjusting your search</p>
+                <button id="clearFilters" class="px-4 py-2 md:px-6 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base">
+                    Clear Filters
+                </button>
             </div>
-            {% endfor %}
-        </div>
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-12 md:py-16 bg-white rounded-xl md:rounded-2xl shadow-sm">
+                <div class="w-16 h-16 md:w-24 md:h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                    <i class="fas fa-inbox text-xl md:text-3xl text-blue-400"></i>
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-gray-700 mb-2">No reports yet</h3>
+                <p class="text-gray-500 text-sm md:text-base mb-4 md:mb-6">Start by reporting an item</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-2 md:gap-4">
+                    <a href="{% url 'report-item' %}" class="px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 inline-flex items-center justify-center text-sm md:text-base shadow hover:shadow-md">
+                        <i class="fas fa-search mr-2 text-xs md:text-base"></i>Report Lost
+                    </a>
+                    <a href="{% url 'report-item' %}?type=found" class="px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 inline-flex items-center justify-center text-sm md:text-base shadow hover:shadow-md">
+                        <i class="fas fa-check-circle mr-2 text-xs md:text-base"></i>Report Found
+                    </a>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate stat counters
-    const counters = document.querySelectorAll('.text-2xl.font-bold');
-    
-    counters.forEach(counter => {
-        const finalValue = parseInt(counter.textContent) || 0;
-        let currentValue = 0;
-        const increment = finalValue / 20;
-        const duration = 800;
-        const stepTime = duration / 20;
-        
-        const timer = setInterval(() => {
-            currentValue += increment;
-            if (currentValue >= finalValue) {
-                counter.textContent = finalValue;
-                clearInterval(timer);
-            } else {
-                counter.textContent = Math.floor(currentValue);
-            }
-        }, stepTime);
-    });
-    
-    // Add hover effects to stat cards
-    const statCards = document.querySelectorAll('.bg-white.rounded-xl');
-    statCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-});
-</script>
+
 
 <style>
-    /* Smooth transitions */
-    .transition-shadow {
-        transition: box-shadow 0.3s ease;
-    }
-
-    .transition-all {
-        transition: all 0.3s ease;
-    }
-
-    /* Truncate long text */
-    .truncate {
+    /* Custom styles */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    /* Card hover effects */
-    .hover\:shadow-md:hover {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Smooth animations */
+    .report-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Gradient backgrounds */
-    .bg-gradient-to-r {
-        background-size: 200% 200%;
-        animation: gradient 3s ease infinite;
+    /* Responsive text truncation */
+    .truncate-2-lines {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
+    /* Mobile optimization */
+    @media (max-width: 640px) {
+        .text-mobile-sm {
+            font-size: 0.75rem;
         }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
+        .p-mobile-sm {
+            padding: 0.75rem;
         }
     }
 </style>
