@@ -14,7 +14,8 @@ SECRET_KEY = 'django-insecure-s1ug2!l&dnr(#^#@^(yunxh**4c3i6hvg34--z3ju82*hi^n(v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["afit-findit.onrender.com", "127.0.0.1", "localhost"]
+
 
 
 
