@@ -115,12 +115,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
 import os
 
-STATIC_URL = '/static/'  # Make sure it starts and ends with a slash
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Folder where collectstatic will gather files
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: compress and cache static files with WhiteNoise
+# This tells Django where your local static folder is
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# WhiteNoise static file compression & caching
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
